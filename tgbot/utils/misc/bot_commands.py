@@ -2,7 +2,7 @@
 from aiogram import Bot
 from aiogram.types import BotCommand, BotCommandScopeChat, BotCommandScopeDefault
 
-from tgbot.config import get_admins
+from tgbot.data.config import get_admins
 
 # Команды для юзеров
 user_commands = [

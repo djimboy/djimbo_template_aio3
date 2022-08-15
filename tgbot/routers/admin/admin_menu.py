@@ -2,7 +2,7 @@
 from aiogram import Router, Bot
 from aiogram.types import FSInputFile, Message
 
-from tgbot.config import PATH_DATABASE, PATH_LOGS
+from tgbot.data.config import PATH_DATABASE, PATH_LOGS
 from tgbot.data.config import PATH_DATABASE, PATH_LOGS
 from tgbot.keyboards.inline_misc import admin_inl
 from tgbot.keyboards.reply_misc import admin_rep

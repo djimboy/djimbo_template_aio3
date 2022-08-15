@@ -2,7 +2,7 @@
 from aiogram.dispatcher.filters import BaseFilter
 from aiogram.types import Message
 
-from tgbot.config import get_admins
+from tgbot.data.config import get_admins
 
 
 # Проверка на админа

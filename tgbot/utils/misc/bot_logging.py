@@ -3,7 +3,7 @@ import logging as bot_logger
 
 import colorlog
 
-from tgbot.config import PATH_LOGS
+from tgbot.data.config import PATH_LOGS
 
 # Формат логгирования
 log_formatter_file = bot_logger.Formatter("%(levelname)s | %(asctime)s | %(filename)s:%(lineno)d | %(message)s")

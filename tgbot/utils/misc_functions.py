@@ -2,7 +2,7 @@
 from aiogram import Bot
 from aiogram.types import FSInputFile
 
-from tgbot.config import get_admins, PATH_DATABASE
+from tgbot.data.config import get_admins, PATH_DATABASE
 from tgbot.utils.const_functions import get_date, send_admins
 
 

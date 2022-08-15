@@ -6,7 +6,7 @@ import sys
 import colorama
 from aiogram import Bot, Dispatcher
 
-from tgbot.config import BOT_TOKEN, scheduler, get_admins
+from tgbot.data.config import BOT_TOKEN, scheduler, get_admins
 from tgbot.middlewares import register_all_middlwares
 from tgbot.routers import register_all_routers
 from tgbot.services.api_session import RequestsSession

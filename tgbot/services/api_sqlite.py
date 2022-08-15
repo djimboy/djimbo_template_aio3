@@ -1,7 +1,7 @@
 # - *- coding: utf- 8 - *-
 import sqlite3
 
-from tgbot.config import PATH_DATABASE
+from tgbot.data.config import PATH_DATABASE
 from tgbot.utils.const_functions import get_unix, get_date
 
 
