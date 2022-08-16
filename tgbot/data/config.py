@@ -8,7 +8,7 @@ scheduler = AsyncIOScheduler()
 read_config = configparser.ConfigParser()
 read_config.read("settings.ini")
 
-BOT_TOKEN = read_config['settings']['token'].strip()  # Токен бота
+BOT_TOKEN = read_config['settings']['token'].strip().replace(' ', '')  # Токен бота
 PATH_DATABASE = "tgbot/data/database.db"  # Путь к БД
 PATH_LOGS = "tgbot/data/logs.log"  # Путь к Логам
 
@@ -17,8 +17,8 @@ PATH_LOGS = "tgbot/data/logs.log"  # Путь к Логам
 def get_admins():
     read_admins = configparser.ConfigParser()
     read_admins.read('settings.ini')
-    admins = read_admins['settings']['admin_id'].strip()
-    admins = admins.replace(' ', '')
+
+    admins = read_admins['settings']['admin_id'].strip().replace(' ', '')
 
     if ',' in admins:
         admins = admins.split(',')
