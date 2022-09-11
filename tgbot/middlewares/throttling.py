@@ -20,40 +20,36 @@ class ThrottlingMiddleware(BaseMiddleware):
 
     async def __call__(self, handler: Callable[[Message, Dict[str, Any]], Awaitable[Any]], event: Message, data):
         real_handler: HandlerObject = data['handler']
-        skip_pass = True
-
         this_user = data.get("event_from_user")
+
         if not this_user.is_bot:
             data['get_user'] = get_userx(user_id=this_user.id)
 
-        if real_handler.flags.get("skip_pass") is not None:
-            skip_pass = real_handler.flags.get("skip_pass")
+        if real_handler.flags.get("rate") is not None:
+            self.now_rate = real_handler.flags.get("rate")
 
-        if skip_pass:
-            if int(time.time()) - self.last_throttled >= self.now_rate:
-                self.last_throttled = int(time.time())
-                self.now_rate = self.default_rate
-                self.count_throttled = 0
+        if int(time.time()) - self.last_throttled >= self.now_rate:
+            self.last_throttled = int(time.time())
+            self.now_rate = self.default_rate
+            self.count_throttled = 0
+
+            return await handler(event, data)
+        else:
+            if self.count_throttled == 0:
+                self.count_throttled += 1
+                self.now_rate = self.default_rate * 2
 
                 return await handler(event, data)
+            elif self.count_throttled == 1:
+                self.count_throttled += 1
+                self.now_rate = self.default_rate * 2
+
+                await event.reply("<b>❗ Пожалуйста, не спамьте.</b>")
             else:
-                if self.count_throttled == 0:
-                    self.count_throttled += 1
-                    self.now_rate = self.default_rate * 2
+                self.now_rate = 3
 
-                    return await handler(event, data)
-                elif self.count_throttled == 1:
-                    self.count_throttled += 1
-                    self.now_rate = self.default_rate * 2
+                if self.count_throttled == 2:
+                    self.count_throttled = 3
+                    await event.reply("<b>❗ Бот не будет отвечать до прекращения спама.</b>")
 
-                    await event.reply("<b>❗ Пожалуйста, не спамьте.</b>")
-                else:
-                    self.now_rate = 3
-
-                    if self.count_throttled == 2:
-                        self.count_throttled = 3
-                        await event.reply("<b>❗ Бот не будет отвечать до прекращения спама.</b>")
-
-            self.last_throttled = int(time.time())
-        else:
-            return await handler(event, data)
+        self.last_throttled = int(time.time())
