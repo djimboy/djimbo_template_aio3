@@ -4,6 +4,7 @@ from typing import Any, Awaitable, Callable, Dict
 
 from aiogram import BaseMiddleware
 from aiogram.dispatcher.event.handler import HandlerObject
+from aiogram.dispatcher.flags import get_flag
 from aiogram.types import Message
 
 from tgbot.services.api_sqlite import get_userx
@@ -25,8 +26,8 @@ class ThrottlingMiddleware(BaseMiddleware):
         if not this_user.is_bot:
             data['get_user'] = get_userx(user_id=this_user.id)
 
-        if real_handler.flags.get("rate") is not None:
-            self.now_rate = real_handler.flags.get("rate")
+        if get_flag(data, "rate") is not None:
+            self.now_rate = get_flag(data, "rate")
 
         if int(time.time()) - self.last_throttled >= self.now_rate:
             self.last_throttled = int(time.time())
