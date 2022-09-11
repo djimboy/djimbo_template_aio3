@@ -37,12 +37,12 @@ class ThrottlingMiddleware(BaseMiddleware):
         else:
             if self.count_throttled == 0:
                 self.count_throttled += 1
-                self.now_rate = self.default_rate * 2
+                self.now_rate += self.default_rate * 2
 
                 return await handler(event, data)
             elif self.count_throttled == 1:
                 self.count_throttled += 1
-                self.now_rate = self.default_rate * 2
+                self.now_rate += self.default_rate * 2
 
                 await event.reply("<b>❗ Пожалуйста, не спамьте.</b>")
             else:
