@@ -38,9 +38,10 @@ async def main():
         await set_commands(bot)
         await startup_notify(bot)
         await scheduler_start(bot)
+        bot_info = await bot.get_me()
 
         bot_logger.warning("Bot was started")
-        print(colorama.Fore.LIGHTYELLOW_EX + "~~~~~ Bot was started ~~~~~")
+        print(colorama.Fore.LIGHTYELLOW_EX + f"~~~~~ Bot was started - @{bot_info.username} ~~~~~")
         print(colorama.Fore.LIGHTBLUE_EX + "~~~~~ TG developer: @djimbox ~~~~~")
         print(colorama.Fore.RESET)
 
