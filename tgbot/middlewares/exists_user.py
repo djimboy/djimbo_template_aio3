@@ -16,15 +16,15 @@ class ExistsUserMiddleware(BaseMiddleware):
             user_id = this_user.id
             user_login = this_user.username
             user_name = clear_html(this_user.first_name)
-            user_fullname = clear_html(this_user.first_name)
             user_surname = clear_html(this_user.last_name)
+            user_fullname = clear_html(this_user.first_name)
             user_language = this_user.language_code
 
-            if user_language != "ru": user_language = "en"
             if user_login is None: user_login = ""
             if user_name is None: user_name = ""
-            if user_fullname is None: user_fullname = ""
             if user_surname is None: user_surname = ""
+            if user_fullname is None: user_fullname = ""
+            if user_language != "ru": user_language = "en"
 
             if len(user_surname) >= 1: user_fullname += f" {user_surname}"
 

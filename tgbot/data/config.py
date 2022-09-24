@@ -3,14 +3,18 @@ import configparser
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-scheduler = AsyncIOScheduler()
+# Токен бота
+BOT_TOKEN = configparser.ConfigParser()
+BOT_TOKEN.read("settings.ini")
+BOT_TOKEN = BOT_TOKEN['settings']['token'].strip().replace(' ', '')
 
-read_config = configparser.ConfigParser()
-read_config.read("settings.ini")
-
-BOT_TOKEN = read_config['settings']['token'].strip().replace(' ', '')  # Токен бота
+# Пути к файлам
 PATH_DATABASE = "tgbot/data/database.db"  # Путь к БД
 PATH_LOGS = "tgbot/data/logs.log"  # Путь к Логам
+
+# Образы и конфиги
+scheduler = AsyncIOScheduler()  # Образ шедулера
+start_status = True  # Оповещение админам при запуске бота (True или False)
 
 
 # Получение администраторов бота

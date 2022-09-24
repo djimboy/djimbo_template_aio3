@@ -7,7 +7,7 @@ from tgbot.routers.user import user_menu
 from tgbot.utils.misc.bot_filters import IsAdmin
 
 
-# Регистрация роутеров
+# Регистрация всех роутеров
 def register_all_routers(dp: Dispatcher):
     # Подключение фильтров
     main_errors.router.message.filter(F.chat.type == "private")
@@ -18,7 +18,7 @@ def register_all_routers(dp: Dispatcher):
 
     admin_menu.router.message.filter(F.chat.type == "private", IsAdmin())
 
-    # Инициализация обязательных роутеров
+    # Подключение обязательных роутеров
     dp.include_router(main_errors.router)
     dp.include_router(main_start.router)
 
@@ -26,5 +26,5 @@ def register_all_routers(dp: Dispatcher):
     dp.include_router(user_menu.router)  # Юзер хендлер
     dp.include_router(admin_menu.router)  # Админ хендлер
 
-    # Инициализация обязательных роутеров
+    # Подключение обязательных роутеров
     dp.include_router(main_missed.router)

@@ -51,7 +51,6 @@ def add_userx(user_id, user_login, user_name, user_surname, user_fullname):
                     "(user_id, user_login, user_name, user_surname, user_fullname, user_date, user_unix) "
                     "VALUES (?, ?, ?, ?, ?, ?, ?)",
                     [user_id, user_login, user_name, user_surname, user_fullname, get_date(), get_unix()])
-        con.commit()
 
 
 # Получение пользователя
@@ -88,7 +87,6 @@ def update_userx(user_id, **kwargs):
         sql, parameters = update_format_with_args(sql, kwargs)
         parameters.append(user_id)
         con.execute(sql + "WHERE user_id = ?", parameters)
-        con.commit()
 
 
 # Удаление пользователя
@@ -98,7 +96,6 @@ def delete_userx(**kwargs):
         sql = "DELETE FROM storage_users"
         sql, parameters = update_format_args(sql, kwargs)
         con.execute(sql, parameters)
-        con.commit()
 
 
 ######################################## СОЗДАНИЕ БАЗЫ ДАННЫХ ######################################
@@ -121,5 +118,3 @@ def create_dbx():
                         "user_date TIMESTAMP,"
                         "user_unix INTEGER)")
             print("DB was not found(1/1) | Creating...")
-
-        con.commit()

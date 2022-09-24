@@ -13,9 +13,12 @@ router = Router()
 @router.errors()
 async def processing_errors(update: Update, exception: TelegramAPIError, bot: Bot):
     print(f"-Exception | {exception}")
-    await send_admins(bot, f"<b>❌ Ошибка\n\n"
-                           f"<b>Exception: <code>{exception}</code>\n\n"
-                           f"Update: <code>{update.dict()}</code></b>")
+    await send_admins(
+        bot,
+        f"<b>❌ Ошибка\n\n"
+        f"<b>Exception: <code>{exception}</code>\n\n"
+        f"Update: <code>{update.dict()}</code></b>"
+    )
 
     bot_logger.exception(
         f"Exception: {exception}\n"

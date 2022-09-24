@@ -10,7 +10,7 @@ router = Router()
 
 # Колбэк с удалением сообщения
 @router.callback_query(text="close_this")
-async def processing_callback_remove(call: CallbackQuery, state: FSM):
+async def processing_callback_close(call: CallbackQuery, state: FSM):
     await call.message.delete()
 
 

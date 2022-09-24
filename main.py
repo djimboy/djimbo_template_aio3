@@ -9,7 +9,7 @@ from aiogram import Bot, Dispatcher
 from tgbot.data.config import BOT_TOKEN, scheduler, get_admins
 from tgbot.middlewares import register_all_middlwares
 from tgbot.routers import register_all_routers
-from tgbot.services.api_session import RequestsSession
+from tgbot.services.api_session import AsyncSession
 from tgbot.services.api_sqlite import create_dbx
 from tgbot.utils.misc.bot_commands import set_commands
 from tgbot.utils.misc.bot_logging import bot_logger
@@ -20,15 +20,15 @@ colorama.init()
 
 # Запуск шедулеров
 async def scheduler_start(bot):
-    scheduler.add_job(autobackup, "cron", hour=00, args=(bot,))  # Автобэкап в 12:00
-    scheduler.add_job(autobackup, "cron", hour=12, args=(bot,))  # Автобэкап в 00:00
+    scheduler.add_job(autobackup, "cron", hour=00, args=(bot,))  # Ежедневный Автобэкап в 00:00
+    scheduler.add_job(autobackup, "cron", hour=12, args=(bot,))  # Ежедневный Автобэкап в 12:00
 
 
 # Запуск бота и функций
 async def main():
     scheduler.start()  # Запуск Шедулера
-    dp = Dispatcher()  # Создание Диспетчера
-    rSession = RequestsSession()  # Асинхронные Запросы
+    dp = Dispatcher()  # Образ Диспетчера
+    aSession = AsyncSession()  # Пул асинхронной сессии запросов
     bot = Bot(token=BOT_TOKEN, parse_mode="HTML")  # Образ Бота
 
     register_all_middlwares(dp)  # Регистрация всех мидлварей
@@ -48,9 +48,9 @@ async def main():
 
         await bot.delete_webhook()
         await bot.get_updates(offset=-1)
-        await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types(), rSession=rSession)
+        await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types(), aSession=aSession)
     finally:
-        await rSession.close()
+        await aSession.close()
         await bot.session.close()
 
 
