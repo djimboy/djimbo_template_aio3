@@ -13,7 +13,7 @@ PATH_DATABASE = "tgbot/data/database.db"  # Путь к БД
 PATH_LOGS = "tgbot/data/logs.log"  # Путь к Логам
 
 # Образы и конфиги
-scheduler = AsyncIOScheduler()  # Образ шедулера
+scheduler = AsyncIOScheduler(timezone="Europe/Moscow")  # Образ шедулера
 start_status = True  # Оповещение админам при запуске бота (True или False)
 
 
