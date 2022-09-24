@@ -1,5 +1,5 @@
 colorlog
-aiogram>=3.0.0b2
+aiogram>=3.0.0b4
 aiohttp
 typing
 APScheduler==3.8.0
