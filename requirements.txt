@@ -1,5 +1,6 @@
-colorlog
+colorlog==6.7.0
 aiogram>=3.0.0b4
-aiohttp
-typing
+aiohttp==3.8.1
+typing==3.7.4.3
 APScheduler==3.8.0
+colorama==0.4.5
