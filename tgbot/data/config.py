@@ -4,7 +4,7 @@ import configparser
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 # Токен бота
-BOT_TOKEN = configparser.ConfigParser()
+BOT_TOKEN = configparser.ConfigParser(timezone="Europe/Moscow")
 BOT_TOKEN.read("settings.ini")
 BOT_TOKEN = BOT_TOKEN['settings']['token'].strip().replace(' ', '')
 
