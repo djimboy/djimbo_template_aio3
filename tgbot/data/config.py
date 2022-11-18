@@ -18,7 +18,7 @@ start_status = True  # Оповещение админам при запуске
 
 
 # Получение администраторов бота
-def get_admins():
+def get_admins() -> list[int]:
     read_admins = configparser.ConfigParser()
     read_admins.read('settings.ini')
 

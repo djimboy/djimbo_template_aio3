@@ -1,4 +1,5 @@
 # - *- coding: utf- 8 - *-
+from aiogram.types import ReplyKeyboardMarkup
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 from tgbot.data.config import get_admins
@@ -6,7 +7,7 @@ from tgbot.utils.const_functions import rkb
 
 
 # Кнопки главного меню
-def menu_frep(user_id):
+def menu_frep(user_id) -> ReplyKeyboardMarkup:
     keyboard = ReplyKeyboardBuilder(
     ).row(
         rkb("User Inline"), rkb("User Reply"),

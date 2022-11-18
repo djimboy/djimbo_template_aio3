@@ -1,4 +1,5 @@
 # - *- coding: utf- 8 - *-
+from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from tgbot.data.config import get_admins
@@ -6,7 +7,7 @@ from tgbot.utils.const_functions import ikb
 
 
 # Кнопки инлайн меню
-def menu_finl(user_id):
+def menu_finl(user_id) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder(
     ).row(
         ikb("User X", data="user_inline_x"),
