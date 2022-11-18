@@ -2,20 +2,22 @@
 import random
 import time
 from datetime import datetime
+from typing import Union
 
 from aiogram import Bot, types
 from aiogram.types import InlineKeyboardButton, KeyboardButton
+
 from tgbot.data.config import get_admins
 
 
 ######################################## AIOGRAM ########################################
 # Генерация реплай кнопки
-def rkb(text):
+def rkb(text) -> KeyboardButton:
     return KeyboardButton(text=text)
 
 
 # Генерация инлайн кнопки
-def ikb(text, data=None, url=None, switch=None):
+def ikb(text, data=None, url=None, switch=None) -> InlineKeyboardButton:
     if data is not None:
         return InlineKeyboardButton(text=text, callback_data=data)
     elif url is not None:
@@ -71,7 +73,7 @@ async def smart_send(bot: Bot, message: types.Message, user_id, text_add=None, r
 
 ######################################## ПРОЧЕЕ ########################################
 # Удаление отступов у текста
-def ded(get_text: str):
+def ded(get_text: str) -> str:
     if get_text is not None:
         split_text = get_text.split("\n")
         if split_text[0] == "": split_text.pop(0)
@@ -84,20 +86,25 @@ def ded(get_text: str):
 
             save_text.append(text)
         get_text = "\n".join(save_text)
+    else:
+        get_text = ""
 
     return get_text
 
+
 # Очистка HTML тэгов
-def clear_html(get_text: str):
+def clear_html(get_text: str) -> str:
     if get_text is not None:
         if "<" in get_text: get_text = get_text.replace("<", "*")
         if ">" in get_text: get_text = get_text.replace(">", "*")
+    else:
+        get_text = ""
 
     return get_text
 
 
 # Очистка пробелов в списке
-def clear_list(get_list: list):
+def clear_list(get_list: list) -> list:
     while "" in get_list: get_list.remove("")
     while " " in get_list: get_list.remove(" ")
     while "," in get_list: get_list.remove(",")
@@ -112,7 +119,7 @@ def split_messages(get_list: list, count: int):
 
 
 # Получение даты
-def get_date():
+def get_date() -> str:
     this_date = datetime.today().replace(microsecond=0)
     this_date = this_date.strftime("%d.%m.%Y %H:%M:%S")
 
@@ -120,35 +127,50 @@ def get_date():
 
 
 # Получение юникс даты
-def get_unix():
-    return int(time.time())
+def get_unix(full=False) -> int:
+    if full:
+        return time.time_ns()
+    else:
+        return int(time.time())
 
 
 # Генерация пароля
-def generate_password(len_password: int):
-    passwd = list("1234567890abcdefghigklmnopqrstuvyxwzABCDEFGHIGKLMNOPQRSTUVYXWZ")
-    random.shuffle(passwd)
-    random_chars = "".join([random.choice(passwd) for x in range(len_password)])
+def gen_password(len_password: int = 16, type_password: str = "default") -> str:  # default, number, letter, onechar
+    if type_password == "default":
+        char_password = list("1234567890abcdefghigklmnopqrstuvyxwzABCDEFGHIGKLMNOPQRSTUVYXWZ")
+    elif type_password == "letter":
+        char_password = list("abcdefghigklmnopqrstuvyxwzABCDEFGHIGKLMNOPQRSTUVYXWZ")
+    elif type_password == "number":
+        char_password = list("1234567890")
+    elif type_password == "onechar":
+        char_password = list("1234567890")
+
+    random.shuffle(char_password)
+    random_chars = "".join([random.choice(char_password) for x in range(len_password)])
+
+    if type_password == "onechar":
+        random_chars = f"{random.choice('abcdefghigklmnopqrstuvyxwzABCDEFGHIGKLMNOPQRSTUVYXWZ')}{random_chars[1:]}"
 
     return random_chars
 
 
 # Корректный вывод времени
-def convert_times(get_time, get_type="day"):
+def convert_times(get_time, get_type="day") -> str:
     get_time = int(get_time)
+    if get_time < 0: get_time = 0
 
     if get_type == "second":
-        get_list = ["секунда", "секунды", "секунд"]
+        get_list = ['секунда', 'секунды', 'секунд']
     elif get_type == "minute":
-        get_list = ["минута", "минуты", "минут"]
+        get_list = ['минута', 'минуты', 'минут']
     elif get_type == "hour":
-        get_list = ["час", "часа", "часов"]
+        get_list = ['час', 'часа', 'часов']
     elif get_type == "day":
-        get_list = ["день", "дня", "дней"]
+        get_list = ['день', 'дня', 'дней']
     elif get_type == "month":
-        get_list = ["месяц", "месяца", "месяцев"]
+        get_list = ['месяц', 'месяца', 'месяцев']
     else:
-        get_list = ["год", "года", "лет"]
+        get_list = ['год', 'года', 'лет']
 
     if get_time % 10 == 1 and get_time % 100 != 11:
         count = 0
@@ -161,35 +183,57 @@ def convert_times(get_time, get_type="day"):
 
 
 ######################################## ЧИСЛА ########################################
+# Преобразование длинных вещественных чисел в читаемый вид
+def snum(amount, remains=0) -> str:
+    if "-" in str(amount):
+        str_amount = "%.*f" % (int(str(amount).split("-")[1]), amount)
+    elif "." in str(amount):
+        str_amount = f"{float(amount):.{len(str(amount).split('.')[1])}f}"
+    else:
+        str_amount = str(amount)
+
+    while str_amount.endswith('0'): str_amount = str_amount[:-1]
+    if str_amount.endswith('.'): str_amount = str_amount[:-1]
+
+    if remains != 0:
+        str_amount = round(float(str_amount), remains)
+
+    return str(str_amount)
+
+
 # Конвертация числа в вещественное
-def to_float(get_number, remains=2):
+def to_float(get_number, remains=2) -> Union[int, float]:
     if "," in str(get_number):
         get_number = str(get_number).replace(",", ".")
 
-    if "." in get_number:
-        get_last = get_number.split(".")
+    if "." in str(get_number):
+        get_last = str(get_number).split(".")
 
-        if get_last[1].endswith("0"):
+        if str(get_last[1]).endswith("0"):
             while True:
-                if get_number.endswith("0"):
-                    get_number = get_number[:-1]
+                if str(get_number).endswith("0"):
+                    get_number = str(get_number)[:-1]
                 else:
                     break
 
         get_number = round(float(get_number), remains)
 
-    if str(float(get_number)).split(".")[1] == "0":
-        get_number = int(get_number)
+    str_number = snum(get_number)
+    if "." in str_number:
+        if str_number.split(".")[1] == "0":
+            get_number = int(get_number)
+        else:
+            get_number = float(get_number)
     else:
-        get_number = float(get_number)
+        get_number = int(get_number)
 
     return get_number
 
 
 # Конвертация числа в целочисленное
-def to_int(get_number):
+def to_int(get_number) -> int:
     if "," in get_number:
-        get_number = get_number.replace(",", ".")
+        get_number = str(get_number).replace(",", ".")
 
     get_number = int(round(float(get_number)))
 
@@ -197,8 +241,8 @@ def to_int(get_number):
 
 
 # Проверка числа на вещественное
-def is_number(get_number):
-    if get_number.isdigit():
+def is_number(get_number) -> bool:
+    if str(get_number).isdigit():
         return False
     else:
         if "," in str(get_number): get_number = str(get_number).replace(",", ".")
@@ -210,18 +254,11 @@ def is_number(get_number):
             return True
 
 
-# Преобразование длинных вещественных чисел в читаемый вид
-def show_floats(amount):
-    return f"{float(amount):.{len(str(amount).split('.')[1])}f}"
-
-
-# Форматирование чисел в читаемый вид
-def format_rate(rate, around=False):
+# Форматирование числа в читаемый вид
+def format_rate(rate, around=False) -> str:
     rate = str(round(float(rate), 2))
 
-    if "," in rate:
-        rate = float(rate.replace(",", "."))
-
+    if "," in rate: rate = float(rate.replace(",", "."))
     len_rate = str(int(float(rate)))
 
     if len(len_rate) == 3:
@@ -241,7 +278,7 @@ def format_rate(rate, around=False):
     elif len(len_rate) == 10:
         get_rate = f"{len_rate[0:1]} {len_rate[1:4]} {len_rate[4:7]} {len_rate[7:]}"
     else:
-        get_rate = 0
+        get_rate = "0"
 
     if not around:
         if "." in rate:

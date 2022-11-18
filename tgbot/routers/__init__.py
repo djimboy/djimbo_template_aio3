@@ -22,7 +22,7 @@ def register_all_routers(dp: Dispatcher):
     dp.include_router(main_errors.router)
     dp.include_router(main_start.router)
 
-    # Подключение хендлеров (юзеров и админов)
+    # Подключение пользовательских роутеров (юзеров и админов)
     dp.include_router(user_menu.router)  # Юзер хендлер
     dp.include_router(admin_menu.router)  # Админ хендлер
 

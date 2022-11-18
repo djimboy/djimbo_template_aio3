@@ -1,26 +1,29 @@
 # - *- coding: utf- 8 - *-
-from aiogram import Router, Bot
-from aiogram.exceptions import TelegramAPIError
-from aiogram.types import Update
+from aiogram import Router
+from aiogram.exceptions import TelegramForbiddenError
+from aiogram.filters import ExceptionTypeFilter, ExceptionMessageFilter
+from aiogram.handlers import ErrorHandler
 
 from tgbot.utils.misc.bot_logging import bot_logger
-from tgbot.utils.misc_functions import send_admins
 
 router = Router()
 
 
-# Обработка ошибок
-@router.errors()
-async def processing_errors(update: Update, exception: TelegramAPIError, bot: Bot):
-    print(f"-Exception | {exception}")
-    await send_admins(
-        bot,
-        f"<b>❌ Ошибка\n\n"
-        f"<b>Exception: <code>{exception}</code>\n\n"
-        f"Update: <code>{update.dict()}</code></b>"
-    )
+# Ошибка с блокировкой бота пользователем
+@router.errors(ExceptionTypeFilter(TelegramForbiddenError))
+class MyHandler(ErrorHandler):
+    async def handle(self):
+        pass
 
-    bot_logger.exception(
-        f"Exception: {exception}\n"
-        f"Update: {update.dict()}"
-    )
+
+# Ошибка с редактированием одинакового сообщения
+@router.errors(ExceptionMessageFilter(
+    "Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message"))
+class MyHandler(ErrorHandler):
+    async def handle(self):
+        bot_logger.exception(
+            f"====================\n"
+            f"Exception name: {self.exception_name}\n"
+            f"Exception message: {self.exception_message}\n"
+            f"===================="
+        )

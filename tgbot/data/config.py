@@ -4,7 +4,7 @@ import configparser
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 # Токен бота
-BOT_TOKEN = configparser.ConfigParser(timezone="Europe/Moscow")
+BOT_TOKEN = configparser.ConfigParser()
 BOT_TOKEN.read("settings.ini")
 BOT_TOKEN = BOT_TOKEN['settings']['token'].strip().replace(' ', '')
 
@@ -22,10 +22,10 @@ def get_admins():
     read_admins = configparser.ConfigParser()
     read_admins.read('settings.ini')
 
-    admins = read_admins['settings']['admin_id'].strip().replace(' ', '')
+    admins = read_admins['settings']['admin_id'].strip().replace(" ", "")
 
-    if ',' in admins:
-        admins = admins.split(',')
+    if "," in admins:
+        admins = admins.split(",")
     else:
         if len(admins) >= 1:
             admins = [admins]

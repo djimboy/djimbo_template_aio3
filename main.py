@@ -13,15 +13,15 @@ from tgbot.services.api_session import AsyncSession
 from tgbot.services.api_sqlite import create_dbx
 from tgbot.utils.misc.bot_commands import set_commands
 from tgbot.utils.misc.bot_logging import bot_logger
-from tgbot.utils.misc_functions import autobackup, startup_notify
+from tgbot.utils.misc_functions import autobackup_admin, startup_notify
 
 colorama.init()
 
 
 # Запуск шедулеров
 async def scheduler_start(bot):
-    scheduler.add_job(autobackup, "cron", hour=00, args=(bot,))  # Ежедневный Автобэкап в 00:00
-    scheduler.add_job(autobackup, "cron", hour=12, args=(bot,))  # Ежедневный Автобэкап в 12:00
+    scheduler.add_job(autobackup_admin, "cron", hour=00, args=(bot,))  # Ежедневный Автобэкап в 00:00
+    scheduler.add_job(autobackup_admin, "cron", hour=12, args=(bot,))  # Ежедневный Автобэкап в 12:00
 
 
 # Запуск бота и функций
@@ -38,11 +38,10 @@ async def main():
         await set_commands(bot)
         await startup_notify(bot)
         await scheduler_start(bot)
-        bot_info = await bot.get_me()
 
         bot_logger.warning("Bot was started")
-        print(colorama.Fore.LIGHTYELLOW_EX + f"~~~~~ Bot was started - @{bot_info.username} ~~~~~")
-        print(colorama.Fore.LIGHTBLUE_EX + "~~~~~ TG developer: @djimbox ~~~~~")
+        print(colorama.Fore.LIGHTYELLOW_EX + f"~~~~~ Bot was started - @{(await bot.get_me()).username} ~~~~~")
+        print(colorama.Fore.LIGHTBLUE_EX + "~~~~~ TG developer - @djimbox ~~~~~")
         print(colorama.Fore.RESET)
 
         if len(get_admins()) == 0: print("***** ENTER ADMIN ID IN settings.ini *****")

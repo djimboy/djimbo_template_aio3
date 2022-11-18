@@ -116,5 +116,6 @@ def create_dbx():
                         "user_surname TEXT,"
                         "user_fullname TEXT,"
                         "user_date TIMESTAMP,"
-                        "user_unix INTEGER)")
+                        "user_unix INTEGER"
+                        ")")
             print("DB was not found(1/1) | Creating...")
