@@ -192,7 +192,8 @@ def snum(amount, remains=0) -> str:
     else:
         str_amount = str(amount)
 
-    while str_amount.endswith('0'): str_amount = str_amount[:-1]
+    if "." in str_amount:
+        while str_amount.endswith('0'): str_amount = str_amount[:-1]
     if str_amount.endswith('.'): str_amount = str_amount[:-1]
 
     if remains != 0:
