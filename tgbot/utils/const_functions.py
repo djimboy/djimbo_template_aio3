@@ -63,7 +63,7 @@ async def smart_send(bot: Bot, message: types.Message, user_id, text_add=None, r
     elif message.sticker is not None:
         await bot.send_sticker(user_id, message.sticker.file_id, reply_markup=reply)
     elif message.dice is not None:
-        await bot.send_dice(user_id, message.dice.emoji, reply_markup=reply)
+        await bot.send_dice(user_id, emoji=message.dice.emoji, reply_markup=reply)
     elif message.location is not None:
         await bot.send_location(user_id, latitude=message.location.latitude, longitude=message.location.longitude,
                                 reply_markup=reply)
@@ -92,7 +92,7 @@ def ded(get_text: str) -> str:
     return get_text
 
 
-# Очистка HTML тэгов
+# Очистка текста от HTML тэгов
 def clear_html(get_text: str) -> str:
     if get_text is not None:
         if "<" in get_text: get_text = get_text.replace("<", "*")

@@ -1,56 +1,58 @@
 # - *- coding: utf- 8 - *-
 import time
-from typing import Any, Awaitable, Callable, Dict
+from typing import Any, Awaitable, Callable, Dict, Union
 
 from aiogram import BaseMiddleware
-from aiogram.dispatcher.event.handler import HandlerObject
 from aiogram.dispatcher.flags import get_flag
-from aiogram.types import Message
-
-from tgbot.services.api_sqlite import get_userx
+from aiogram.types import Message, User
+from cachetools import TTLCache
 
 
 # Антиспам
 class ThrottlingMiddleware(BaseMiddleware):
-    def __init__(self, default_rate: int = 0.6) -> None:
+    def __init__(self, default_rate: Union[int, float] = 0.6) -> None:
         self.default_rate = default_rate
-        self.now_rate = default_rate
 
-        self.last_throttled = int(time.time())
-        self.count_throttled = 0
+        self.users = TTLCache(maxsize=10_000, ttl=600)
 
     async def __call__(self, handler: Callable[[Message, Dict[str, Any]], Awaitable[Any]], event: Message, data):
-        real_handler: HandlerObject = data['handler']
-        this_user = data.get("event_from_user")
-
-        if not this_user.is_bot:
-            data['get_user'] = get_userx(user_id=this_user.id)
+        this_user: User = data.get("event_from_user")
 
         if get_flag(data, "rate") is not None:
-            self.now_rate = get_flag(data, "rate")
+            self.default_rate = get_flag(data, "rate")
 
-        if int(time.time()) - self.last_throttled >= self.now_rate:
-            self.last_throttled = int(time.time())
-            self.now_rate = self.default_rate
-            self.count_throttled = 0
+        if this_user.id not in self.users:
+            self.users[this_user.id] = {
+                'last_throttled': int(time.time()),
+                'count_throttled': 0,
+                'now_rate': self.default_rate,
+            }
 
             return await handler(event, data)
         else:
-            if self.count_throttled == 0:
-                self.count_throttled += 1
-                self.now_rate += self.default_rate * 2
+            if int(time.time()) - self.users[this_user.id]['last_throttled'] >= self.users[this_user.id]['now_rate']:
+                self.users.pop(this_user.id)
 
                 return await handler(event, data)
-            elif self.count_throttled == 1:
-                self.count_throttled += 1
-                self.now_rate += self.default_rate * 2
-
-                await event.reply("<b>❗ Пожалуйста, не спамьте.</b>")
             else:
-                self.now_rate = 3
+                self.users[this_user.id]['last_throttled'] = int(time.time())
 
-                if self.count_throttled == 2:
-                    self.count_throttled = 3
-                    await event.reply("<b>❗ Бот не будет отвечать до прекращения спама.</b>")
+                if self.users[this_user.id]['count_throttled'] == 0:
+                    self.users[this_user.id]['count_throttled'] = 1
+                    self.users[this_user.id]['now_rate'] *= 2
 
-        self.last_throttled = int(time.time())
+                    return await handler(event, data)
+                elif self.users[this_user.id]['count_throttled'] == 1:
+                    self.users[this_user.id]['count_throttled'] = 2
+                    self.users[this_user.id]['now_rate'] *= 2
+
+                    await event.reply("<b>❗ Пожалуйста, не спамьте.\n"
+                                      "❗ Please, do not spam.</b>")
+                elif self.users[this_user.id]['count_throttled'] == 2:
+                    self.users[this_user.id]['count_throttled'] = 3
+                    self.users[this_user.id]['now_rate'] = 3
+
+                    await event.reply("<b>❗ Бот не будет отвечать до прекращения спама.\n"
+                                      "❗ The bot will not respond until the spam stops.</b>")
+                else:
+                    pass
