@@ -256,34 +256,29 @@ def is_number(get_number) -> bool:
 
 
 # Форматирование числа в читаемый вид
-def format_rate(rate, around=False) -> str:
-    rate = str(round(float(rate), 2))
+def format_rate(amount: Union[float, int], around: int = 2) -> str:
+    if "," in str(amount): amount = float(str(amount).replace(",", "."))
+    if " " in str(amount): amount = float(str(amount).replace(" ", ""))
+    amount = str(round(amount, around))
 
-    if "," in rate: rate = float(rate.replace(",", "."))
-    len_rate = str(int(float(rate)))
+    out_amount, save_remains = [], ""
 
-    if len(len_rate) == 3:
-        get_rate = str(len_rate)
-    elif len(len_rate) == 4:
-        get_rate = f"{len_rate[0]} {len_rate[1:]}"
-    elif len(len_rate) == 5:
-        get_rate = f"{len_rate[0:2]} {len_rate[2:]}"
-    elif len(len_rate) == 6:
-        get_rate = f"{len_rate[0:3]} {len_rate[3:]}"
-    elif len(len_rate) == 7:
-        get_rate = f"{len_rate[0:1]} {len_rate[1:4]} {len_rate[4:]}"
-    elif len(len_rate) == 8:
-        get_rate = f"{len_rate[0:2]} {len_rate[2:5]} {len_rate[5:]}"
-    elif len(len_rate) == 9:
-        get_rate = f"{len_rate[0:3]} {len_rate[3:6]} {len_rate[6:]}"
-    elif len(len_rate) == 10:
-        get_rate = f"{len_rate[0:1]} {len_rate[1:4]} {len_rate[4:7]} {len_rate[7:]}"
-    else:
-        get_rate = "0"
+    if "." in amount: save_remains = amount.split(".")[1]
+    save_amount = [char for char in str(int(float(amount)))]
 
-    if not around:
-        if "." in rate:
-            dot_amount = rate.find(".")
-            get_rate += f"{rate[dot_amount:]}"
+    if len(save_amount) % 3 != 0:
+        if (len(save_amount) - 1) % 3 == 0:
+            out_amount.extend([save_amount[0]])
+            save_amount.pop(0)
+        elif (len(save_amount) - 2) % 3 == 0:
+            out_amount.extend([save_amount[0], save_amount[1]])
+            save_amount.pop(0)
+            save_amount.pop(1)
+        else:
+            print("Error 4388326")
 
-    return get_rate
+    for x, char in enumerate(save_amount):
+        if x % 3 == 0: out_amount.append(" ")
+        out_amount.append(char)
+
+    return "".join(out_amount).strip() + "." + save_remains
