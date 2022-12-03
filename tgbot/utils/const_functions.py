@@ -12,12 +12,12 @@ from tgbot.data.config import get_admins
 
 ######################################## AIOGRAM ########################################
 # Генерация реплай кнопки
-def rkb(text) -> KeyboardButton:
+def rkb(text: str) -> KeyboardButton:
     return KeyboardButton(text=text)
 
 
 # Генерация инлайн кнопки
-def ikb(text, data=None, url=None, switch=None) -> InlineKeyboardButton:
+def ikb(text: str, data: str = None, url: str = None, switch: str = None) -> InlineKeyboardButton:
     if data is not None:
         return InlineKeyboardButton(text=text, callback_data=data)
     elif url is not None:
@@ -27,11 +27,11 @@ def ikb(text, data=None, url=None, switch=None) -> InlineKeyboardButton:
 
 
 # Отправка сообщения всем админам
-async def send_admins(bot: Bot, message, markup=None, not_me=0):
+async def send_admins(bot: Bot, text: str, markup=None, not_me=0):
     for admin in get_admins():
         try:
             if str(admin) != str(not_me):
-                await bot.send_message(admin, message, reply_markup=markup, disable_web_page_preview=True)
+                await bot.send_message(admin, text, reply_markup=markup, disable_web_page_preview=True)
         except:
             pass
 
@@ -114,16 +114,13 @@ def clear_list(get_list: list) -> list:
 
 
 # Разбив списка на несколько частей
-def split_messages(get_list: list, count: int):
+def split_messages(get_list: list, count: int) -> list[list]:
     return [get_list[i:i + count] for i in range(0, len(get_list), count)]
 
 
 # Получение даты
 def get_date() -> str:
-    this_date = datetime.today().replace(microsecond=0)
-    this_date = this_date.strftime("%d.%m.%Y %H:%M:%S")
-
-    return this_date
+    return datetime.today().replace(microsecond=0).strftime("%d.%m.%Y %H:%M:%S")
 
 
 # Получение юникс даты
