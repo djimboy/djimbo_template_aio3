@@ -124,7 +124,7 @@ def get_date() -> str:
 
 
 # Получение юникс даты
-def get_unix(full=False) -> int:
+def get_unix(full: bool = False) -> int:
     if full:
         return time.time_ns()
     else:
