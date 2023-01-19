@@ -20,7 +20,7 @@ async def main_start(message: Message, bot: Bot, state: FSM, rSession: AS, my_us
         ded("""
         🔸 Бот готов к использованию.
         🔸 Если не появились вспомогательные кнопки
-        🔸 Введите /start,
+        🔸 Введите /start
         """),
         reply_markup=menu_frep(message.from_user.id),
     )
