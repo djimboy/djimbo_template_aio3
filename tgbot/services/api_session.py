@@ -5,7 +5,7 @@ import aiohttp
 
 
 # Асинхронная сессия для запросов
-class AsyncSession:
+class RequestSession:
     def __init__(self) -> None:
         self._session: Optional[aiohttp.ClientSession] = None
 

@@ -16,9 +16,11 @@ async def startup_notify(bot: Bot):
 async def autobackup_admin(bot: Bot):
     for admin in get_admins():
         try:
-            await bot.send_document(admin,
-                                    FSInputFile(PATH_DATABASE),
-                                    caption=f"<b>📦 AUTOBACKUP</b>\n"
-                                            f"🕰 <code>{get_date()}</code>")
+            await bot.send_document(
+                admin,
+                FSInputFile(PATH_DATABASE),
+                caption=f"<b>📦 AUTOBACKUP</b>\n"
+                        f"🕰 <code>{get_date()}</code>",
+            )
         except:
             pass

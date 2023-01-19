@@ -18,7 +18,8 @@ class MyHandler(ErrorHandler):
 
 # Ошибка с редактированием одинакового сообщения
 @router.errors(ExceptionMessageFilter(
-    "Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message"))
+    "Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message")
+)
 class MyHandler(ErrorHandler):
     async def handle(self):
         bot_logger.exception(

@@ -4,10 +4,11 @@ import time
 from datetime import datetime
 from typing import Union
 
+import pytz
 from aiogram import Bot, types
 from aiogram.types import InlineKeyboardButton, KeyboardButton
 
-from tgbot.data.config import get_admins
+from tgbot.data.config import get_admins, BOT_TIMEZONE
 
 
 ######################################## AIOGRAM ########################################
@@ -120,7 +121,7 @@ def split_messages(get_list: list, count: int) -> list[list]:
 
 # Получение даты
 def get_date() -> str:
-    return datetime.today().replace(microsecond=0).strftime("%d.%m.%Y %H:%M:%S")
+    return datetime.now(pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y %H:%M:%S")
 
 
 # Получение юникс даты

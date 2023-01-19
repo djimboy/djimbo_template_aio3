@@ -14,7 +14,7 @@ router = Router()
 
 # Кнопка - Admin Inline
 @router.message(Text(text="Admin Inline"))
-async def admin_button_inline(message: Message, bot: Bot, state: FSM, aSession: AS, my_user):
+async def admin_button_inline(message: Message, bot: Bot, state: FSM, rSession: AS, my_user):
     await state.clear()
 
     await message.answer("Click Button - Admin Inline", reply_markup=admin_inl)
@@ -22,7 +22,7 @@ async def admin_button_inline(message: Message, bot: Bot, state: FSM, aSession: 
 
 # Кнопка - Admin Reply
 @router.message(Text(text="Admin Reply"))
-async def admin_button_reply(message: Message, bot: Bot, state: FSM, aSession: AS, my_user):
+async def admin_button_reply(message: Message, bot: Bot, state: FSM, rSession: AS, my_user):
     await state.clear()
 
     await message.answer("Click Button - Admin Reply", reply_markup=admin_rep)
@@ -30,13 +30,13 @@ async def admin_button_reply(message: Message, bot: Bot, state: FSM, aSession: A
 
 # Колбэк - Admin X
 @router.callback_query(Text(text="admin_inline_x"))
-async def admin_callback_inline_x(call: CallbackQuery, bot: Bot, state: FSM, aSession: AS, my_user):
+async def admin_callback_inline_x(call: CallbackQuery, bot: Bot, state: FSM, rSession: AS, my_user):
     await call.answer(f"Click Admin X")
 
 
 # Колбэк - Admin
 @router.callback_query(Text(startswith="admin_inline:"))
-async def admin_callback_inline(call: CallbackQuery, bot: Bot, state: FSM, aSession: AS, my_user):
+async def admin_callback_inline(call: CallbackQuery, bot: Bot, state: FSM, rSession: AS, my_user):
     get_data = call.data.split(":")[1]
 
     await call.answer(f"Click Admin - {get_data}", True)
@@ -44,7 +44,7 @@ async def admin_callback_inline(call: CallbackQuery, bot: Bot, state: FSM, aSess
 
 # Получение Базы Данных
 @router.message(Command(commands=['db', 'database']))
-async def admin_database(message: Message, bot: Bot, state: FSM, aSession: AS, my_user):
+async def admin_database(message: Message, bot: Bot, state: FSM, rSession: AS, my_user):
     await state.clear()
 
     await message.answer_document(FSInputFile(PATH_DATABASE),
@@ -54,7 +54,7 @@ async def admin_database(message: Message, bot: Bot, state: FSM, aSession: AS, m
 
 # Получение логов
 @router.message(Command(commands=['log', 'logs']))
-async def admin_log(message: Message, bot: Bot, state: FSM, aSession: AS, my_user):
+async def admin_log(message: Message, bot: Bot, state: FSM, rSession: AS, my_user):
     await state.clear()
 
     await message.answer_document(FSInputFile(PATH_LOGS),
@@ -64,7 +64,7 @@ async def admin_log(message: Message, bot: Bot, state: FSM, aSession: AS, my_use
 
 # Очистить логи
 @router.message(Command(commands=['clear_log', 'clear_logs', 'log_clear', 'logs_clear']))
-async def admin_logs_clear(message: Message, bot: Bot, state: FSM, aSession: AS, my_user):
+async def admin_logs_clear(message: Message, bot: Bot, state: FSM, rSession: AS, my_user):
     await state.clear()
 
     with open(PATH_LOGS, "w") as file:

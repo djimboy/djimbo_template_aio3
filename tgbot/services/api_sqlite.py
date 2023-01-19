@@ -18,21 +18,18 @@ def dict_factory(cursor, row):
 ####################################################################################################
 ##################################### ФОРМАТИРОВАНИЕ ЗАПРОСОВ ######################################
 # Форматирование запроса без аргументов
-def update_format_with_args(sql, parameters: dict):
-    if "XXX" not in sql:
-        sql += " XXX "
-
+def update_format(sql, parameters: dict):
     values = ", ".join([
         f"{item} = ?" for item in parameters
     ])
-    sql = sql.replace("XXX", values)
+    sql += f" {values}"
 
     return sql, list(parameters.values())
 
 
 # Форматирование запроса с аргументами
-def update_format_args(sql, parameters: dict):
-    sql = f"{sql} WHERE "
+def update_format_where(sql, parameters: dict):
+    sql += " WHERE "
 
     sql += " AND ".join([
         f"{item} = ?" for item in parameters
@@ -58,7 +55,7 @@ def get_userx(**kwargs):
     with sqlite3.connect(PATH_DATABASE) as con:
         con.row_factory = dict_factory
         sql = "SELECT * FROM storage_users"
-        sql, parameters = update_format_args(sql, kwargs)
+        sql, parameters = update_format_where(sql, kwargs)
         return con.execute(sql, parameters).fetchone()
 
 
@@ -67,7 +64,7 @@ def get_usersx(**kwargs):
     with sqlite3.connect(PATH_DATABASE) as con:
         con.row_factory = dict_factory
         sql = "SELECT * FROM storage_users"
-        sql, parameters = update_format_args(sql, kwargs)
+        sql, parameters = update_format_where(sql, kwargs)
         return con.execute(sql, parameters).fetchall()
 
 
@@ -84,7 +81,7 @@ def update_userx(user_id, **kwargs):
     with sqlite3.connect(PATH_DATABASE) as con:
         con.row_factory = dict_factory
         sql = f"UPDATE storage_users SET"
-        sql, parameters = update_format_with_args(sql, kwargs)
+        sql, parameters = update_format(sql, kwargs)
         parameters.append(user_id)
         con.execute(sql + "WHERE user_id = ?", parameters)
 
@@ -94,7 +91,7 @@ def delete_userx(**kwargs):
     with sqlite3.connect(PATH_DATABASE) as con:
         con.row_factory = dict_factory
         sql = "DELETE FROM storage_users"
-        sql, parameters = update_format_args(sql, kwargs)
+        sql, parameters = update_format_where(sql, kwargs)
         con.execute(sql, parameters)
 
 

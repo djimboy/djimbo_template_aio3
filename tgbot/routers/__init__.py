@@ -12,19 +12,19 @@ def register_all_routers(dp: Dispatcher):
     # Подключение фильтров
     main_errors.router.message.filter(F.chat.type == "private")
     main_start.router.message.filter(F.chat.type == "private")
-    main_missed.router.message.filter(F.chat.type == "private")
 
     user_menu.router.message.filter(F.chat.type == "private")
-
     admin_menu.router.message.filter(F.chat.type == "private", IsAdmin())
 
+    main_missed.router.message.filter(F.chat.type == "private")
+
     # Подключение обязательных роутеров
-    dp.include_router(main_errors.router)
-    dp.include_router(main_start.router)
+    dp.include_router(main_errors.router)  # Роутер ошибки
+    dp.include_router(main_start.router)  # Роутер основных команд
 
     # Подключение пользовательских роутеров (юзеров и админов)
-    dp.include_router(user_menu.router)  # Юзер хендлер
-    dp.include_router(admin_menu.router)  # Админ хендлер
+    dp.include_router(user_menu.router)  # Юзер роутер
+    dp.include_router(admin_menu.router)  # Админ роутер
 
     # Подключение обязательных роутеров
-    dp.include_router(main_missed.router)
+    dp.include_router(main_missed.router)  # Роутер пропущенных апдейтов

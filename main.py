@@ -9,7 +9,7 @@ from aiogram import Bot, Dispatcher
 from tgbot.data.config import BOT_TOKEN, scheduler, get_admins
 from tgbot.middlewares import register_all_middlwares
 from tgbot.routers import register_all_routers
-from tgbot.services.api_session import AsyncSession
+from tgbot.services.api_session import RequestSession
 from tgbot.services.api_sqlite import create_dbx
 from tgbot.utils.misc.bot_commands import set_commands
 from tgbot.utils.misc.bot_logging import bot_logger
@@ -28,7 +28,7 @@ async def scheduler_start(bot):
 async def main():
     scheduler.start()  # Запуск Шедулера
     dp = Dispatcher()  # Образ Диспетчера
-    aSession = AsyncSession()  # Пул асинхронной сессии запросов
+    rSession = RequestSession()  # Пул асинхронной сессии запросов
     bot = Bot(token=BOT_TOKEN, parse_mode="HTML")  # Образ Бота
 
     register_all_middlwares(dp)  # Регистрация всех мидлварей
@@ -48,9 +48,9 @@ async def main():
 
         await bot.delete_webhook()
         await bot.get_updates(offset=-1)
-        await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types(), aSession=aSession)
+        await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types(), rSession=rSession)
     finally:
-        await aSession.close()
+        await rSession.close()
         await bot.session.close()
 
 
