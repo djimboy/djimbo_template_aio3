@@ -5,7 +5,7 @@ from aiogram.types import Message
 
 from tgbot.keyboards.reply_main import menu_frep
 from tgbot.utils.const_functions import ded
-from tgbot.utils.misc.bot_models import FSM, AS
+from tgbot.utils.misc.bot_models import FSM, RS
 
 router = Router()
 
@@ -13,7 +13,7 @@ router = Router()
 # Открытие главного меню
 @router.message(Text(text=['🔙 Главное меню']))
 @router.message(Command(commands=['start']))
-async def main_start(message: Message, bot: Bot, state: FSM, rSession: AS, my_user):
+async def main_start(message: Message, bot: Bot, state: FSM, rSession: RS, my_user):
     await state.clear()
 
     await message.answer(

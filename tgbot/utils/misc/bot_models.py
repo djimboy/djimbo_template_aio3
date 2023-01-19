@@ -4,4 +4,4 @@ from aiogram.fsm.context import FSMContext
 from tgbot.services.api_session import RequestSession
 
 FSM = FSMContext
-AS = RequestSession
+RS = RequestSession
