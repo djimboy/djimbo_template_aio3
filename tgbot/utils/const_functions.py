@@ -279,4 +279,8 @@ def format_rate(amount: Union[float, int], around: int = 2) -> str:
         if x % 3 == 0: out_amount.append(" ")
         out_amount.append(char)
 
-    return "".join(out_amount).strip() + "." + save_remains
+    response = "".join(out_amount).strip() + "." + save_remains
+    if response.endswith("."):
+        response = response[:-1]
+
+    return response
