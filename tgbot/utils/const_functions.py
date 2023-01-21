@@ -270,8 +270,8 @@ def format_rate(amount: Union[float, int], around: int = 2) -> str:
             save_amount.pop(0)
         elif (len(save_amount) - 2) % 3 == 0:
             out_amount.extend([save_amount[0], save_amount[1]])
-            save_amount.pop(0)
             save_amount.pop(1)
+            save_amount.pop(0)
         else:
             print("Error 4388326")
 
