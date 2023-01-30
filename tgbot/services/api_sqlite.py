@@ -45,9 +45,9 @@ def add_userx(user_id, user_login, user_name, user_surname, user_fullname):
     with sqlite3.connect(PATH_DATABASE) as con:
         con.row_factory = dict_factory
         con.execute("INSERT INTO storage_users "
-                    "(user_id, user_login, user_name, user_surname, user_fullname, user_date, user_unix) "
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    [user_id, user_login, user_name, user_surname, user_fullname, get_date(), get_unix()])
+                    "(user_id, user_login, user_name, user_surname, user_fullname, user_unix) "
+                    "VALUES (?, ?, ?, ?, ?, ?)",
+                    [user_id, user_login, user_name, user_surname, user_fullname, get_unix()])
 
 
 # Получение пользователя
@@ -102,7 +102,7 @@ def create_dbx():
         con.row_factory = dict_factory
 
         # Таблица с хранением пользователей
-        if len(con.execute("PRAGMA table_info(storage_users)").fetchall()) == 8:
+        if len(con.execute("PRAGMA table_info(storage_users)").fetchall()) == 7:
             print("DB was found(1/1)")
         else:
             con.execute("CREATE TABLE storage_users("
@@ -112,7 +112,6 @@ def create_dbx():
                         "user_name TEXT,"
                         "user_surname TEXT,"
                         "user_fullname TEXT,"
-                        "user_date TIMESTAMP,"
                         "user_unix INTEGER"
                         ")")
             print("DB was not found(1/1) | Creating...")

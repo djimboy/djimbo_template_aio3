@@ -120,16 +120,32 @@ def split_messages(get_list: list, count: int) -> list[list]:
 
 
 # Получение даты
-def get_date() -> str:
-    return datetime.now(pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y %H:%M:%S")
+def get_date(full: bool = True) -> str:
+    if full: # Полная дата с временем
+        return datetime.now(pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y %H:%M:%S")
+    else: # Только дата без времени
+        return datetime.now(pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y")
 
 
-# Получение юникс даты
+# Получение unix времени
 def get_unix(full: bool = False) -> int:
-    if full:
+    if full: # Время в наносекундах
         return time.time_ns()
-    else:
+    else: # Время в секундах
         return int(time.time())
+
+
+# Конвертация unix в дату и наоборот, дату в unix
+def convert_date(from_time):
+    if str(from_time).isdigit():
+        to_time = datetime.fromtimestamp(from_time, pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y %H:%M:%S")
+    else:
+        if " " in str(from_time):
+            to_time = int(datetime.strptime(from_time, "%d.%m.%Y %H:%M:%S").timestamp())
+        else:
+            to_time = int(datetime.strptime(from_time, "%d.%m.%Y").timestamp())
+
+    return to_time
 
 
 # Генерация пароля
