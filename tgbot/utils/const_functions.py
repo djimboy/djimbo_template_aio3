@@ -199,19 +199,19 @@ def convert_times(get_time, get_type="day") -> str:
 ######################################## ЧИСЛА ########################################
 # Преобразование длинных вещественных чисел в читаемый вид
 def snum(amount, remains=0) -> str:
-    if "-" in str(amount):
-        str_amount = "%.*f" % (int(str(amount).split("-")[1]), amount)
-    elif "." in str(amount):
-        str_amount = f"{float(amount):.{len(str(amount).split('.')[1])}f}"
-    else:
-        str_amount = str(amount)
-
-    if "." in str_amount:
-        while str_amount.endswith('0'): str_amount = str_amount[:-1]
-    if str_amount.endswith('.'): str_amount = str_amount[:-1]
+    str_amount = f"{float(amount):8f}"
 
     if remains != 0:
-        str_amount = round(float(str_amount), remains)
+        if "." in str_amount:
+            remains_find = str_amount.find(".")
+            remains_save = remains_find + 8 - (8 - remains) + 1
+
+            str_amount = str_amount[:remains_save]
+
+    if "." in str(str_amount):
+        while str(str_amount).endswith('0'): str_amount = str(str_amount)[:-1]
+
+    if str(str_amount).endswith('.'): str_amount = str(str_amount)[:-1]
 
     return str(str_amount)
 

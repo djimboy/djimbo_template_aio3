@@ -48,6 +48,7 @@ async def main():
 
         await bot.delete_webhook()
         await bot.get_updates(offset=-1)
+
         await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types(), rSession=rSession)
     finally:
         await rSession.close()
