@@ -83,7 +83,7 @@ def ded(get_text: str) -> str:
 
         for text in split_text:
             while text.startswith(" "):
-                text = text[1:]
+                text = text[1:].strip()
 
             save_text.append(text)
         get_text = "\n".join(save_text)
