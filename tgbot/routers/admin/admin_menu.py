@@ -47,9 +47,11 @@ async def admin_callback_inline(call: CallbackQuery, bot: Bot, state: FSM, rSess
 async def admin_database(message: Message, bot: Bot, state: FSM, rSession: RS, my_user):
     await state.clear()
 
-    await message.answer_document(FSInputFile(PATH_DATABASE),
-                                  caption=f"<b>📦 BACKUP</b>\n"
-                                          f"🕰 <code>{get_date()}</code>")
+    await message.answer_document(
+        FSInputFile(PATH_DATABASE),
+        caption=f"<b>📦 BACKUP</b>\n"
+                f"🕰 <code>{get_date()}</code>",
+    )
 
 
 # Получение логов
@@ -57,9 +59,11 @@ async def admin_database(message: Message, bot: Bot, state: FSM, rSession: RS, m
 async def admin_log(message: Message, bot: Bot, state: FSM, rSession: RS, my_user):
     await state.clear()
 
-    await message.answer_document(FSInputFile(PATH_LOGS),
-                                  caption=f"<b>🖨 LOGS</b>\n"
-                                          f"🕰 <code>{get_date()}</code>")
+    await message.answer_document(
+        FSInputFile(PATH_LOGS),
+        caption=f"<b>🖨 LOGS</b>\n"
+                f"🕰 <code>{get_date()}</code>",
+    )
 
 
 # Очистить логи
