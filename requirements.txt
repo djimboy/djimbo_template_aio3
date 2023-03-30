@@ -1,5 +1,5 @@
 APScheduler==3.9.1
-aiogram==3.0.0b6
+aiogram==3.0.0b7
 colorlog==6.7.0
 typing==3.7.4.3
 aiohttp==3.8.3
