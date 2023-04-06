@@ -10,7 +10,7 @@ from cachetools import TTLCache
 
 # Антиспам
 class ThrottlingMiddleware(BaseMiddleware):
-    def __init__(self, default_rate: Union[int, float] = 0.6) -> None:
+    def __init__(self, default_rate: Union[int, float] = 1) -> None:
         self.default_rate = default_rate
 
         self.users = TTLCache(maxsize=10_000, ttl=600)
@@ -39,20 +39,18 @@ class ThrottlingMiddleware(BaseMiddleware):
 
                 if self.users[this_user.id]['count_throttled'] == 0:
                     self.users[this_user.id]['count_throttled'] = 1
-                    self.users[this_user.id]['now_rate'] *= 2
+                    self.users[this_user.id]['now_rate'] = self.default_rate + 2
 
                     return await handler(event, data)
                 elif self.users[this_user.id]['count_throttled'] == 1:
                     self.users[this_user.id]['count_throttled'] = 2
-                    self.users[this_user.id]['now_rate'] *= 2
+                    self.users[this_user.id]['now_rate'] = self.default_rate + 3
 
                     await event.reply("<b>❗ Пожалуйста, не спамьте.\n"
                                       "❗ Please, do not spam.</b>")
                 elif self.users[this_user.id]['count_throttled'] == 2:
                     self.users[this_user.id]['count_throttled'] = 3
-                    self.users[this_user.id]['now_rate'] = 3
+                    self.users[this_user.id]['now_rate'] = self.default_rate + 5
 
                     await event.reply("<b>❗ Бот не будет отвечать до прекращения спама.\n"
                                       "❗ The bot will not respond until the spam stops.</b>")
-                else:
-                    pass

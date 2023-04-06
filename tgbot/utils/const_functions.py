@@ -6,7 +6,7 @@ from typing import Union
 
 import pytz
 from aiogram import Bot, types
-from aiogram.types import InlineKeyboardButton, KeyboardButton
+from aiogram.types import InlineKeyboardButton, KeyboardButton, WebAppInfo
 
 from tgbot.data.config import get_admins, BOT_TIMEZONE
 
@@ -18,13 +18,15 @@ def rkb(text: str) -> KeyboardButton:
 
 
 # Генерация инлайн кнопки
-def ikb(text: str, data: str = None, url: str = None, switch: str = None) -> InlineKeyboardButton:
+def ikb(text: str, data: str = None, url: str = None, switch: str = None, web: str = None) -> InlineKeyboardButton:
     if data is not None:
         return InlineKeyboardButton(text=text, callback_data=data)
     elif url is not None:
         return InlineKeyboardButton(text=text, url=url)
-    else:
+    elif switch is not None:
         return InlineKeyboardButton(text=text, switch_inline_query=switch)
+    elif web is not None:
+        return InlineKeyboardButton(text=text, web_app=WebAppInfo(url=web))
 
 
 # Отправка сообщения всем админам
@@ -115,28 +117,28 @@ def clear_list(get_list: list) -> list:
 
 
 # Разбив списка на несколько частей
-def split_messages(get_list: list, count: int) -> list[list]:
+def split_list(get_list: list, count: int) -> list[list]:
     return [get_list[i:i + count] for i in range(0, len(get_list), count)]
 
 
 # Получение даты
 def get_date(full: bool = True) -> str:
-    if full: # Полная дата с временем
+    if full:  # Полная дата с временем
         return datetime.now(pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y %H:%M:%S")
-    else: # Только дата без времени
+    else:  # Только дата без времени
         return datetime.now(pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y")
 
 
 # Получение unix времени
 def get_unix(full: bool = False) -> int:
-    if full: # Время в наносекундах
+    if full:  # Время в наносекундах
         return time.time_ns()
-    else: # Время в секундах
+    else:  # Время в секундах
         return int(time.time())
 
 
 # Конвертация unix в дату и наоборот, дату в unix
-def convert_date(from_time):
+def convert_date(from_time) -> Union[str, int]:
     if str(from_time).isdigit():
         to_time = datetime.fromtimestamp(from_time, pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y %H:%M:%S")
     else:
@@ -148,8 +150,8 @@ def convert_date(from_time):
     return to_time
 
 
-# Генерация пароля
-def gen_password(len_password: int = 16, type_password: str = "default") -> str:  # default, number, letter, onechar
+# Генерация пароля | default, number, letter, onechar
+def gen_password(len_password: int = 16, type_password: str = "default") -> str:
     if type_password == "default":
         char_password = list("1234567890abcdefghigklmnopqrstuvyxwzABCDEFGHIGKLMNOPQRSTUVYXWZ")
     elif type_password == "letter":
@@ -194,6 +196,18 @@ def convert_times(get_time, get_type="day") -> str:
         count = 2
 
     return f"{get_time} {get_list[count]}"
+
+
+# Проверка на булевый тип
+def is_bool(value: Union[bool, str, int]) -> bool:
+    value = str(value).lower()
+
+    if value in ('y', 'yes', 't', 'true', 'on', '1'):
+        return True
+    elif value in ('n', 'no', 'f', 'false', 'off', '0'):
+        return False
+    else:
+        raise ValueError(f"invalid truth value {value}")
 
 
 ######################################## ЧИСЛА ########################################
@@ -258,15 +272,15 @@ def to_int(get_number) -> int:
 # Проверка числа на вещественное
 def is_number(get_number) -> bool:
     if str(get_number).isdigit():
-        return False
+        return True
     else:
         if "," in str(get_number): get_number = str(get_number).replace(",", ".")
 
         try:
             float(get_number)
-            return False
-        except ValueError:
             return True
+        except ValueError:
+            return False
 
 
 # Форматирование числа в читаемый вид
@@ -296,6 +310,7 @@ def format_rate(amount: Union[float, int], around: int = 2) -> str:
         out_amount.append(char)
 
     response = "".join(out_amount).strip() + "." + save_remains
+
     if response.endswith("."):
         response = response[:-1]
 

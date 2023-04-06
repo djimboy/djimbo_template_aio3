@@ -38,6 +38,4 @@ def get_admins() -> list[int]:
     while "," in admins: admins.remove(",")
     while "\r" in admins: admins.remove("\r")
 
-    admins = list(map(int, admins))
-
-    return admins
+    return list(map(int, admins))
