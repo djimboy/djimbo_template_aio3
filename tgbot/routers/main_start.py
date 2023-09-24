@@ -1,6 +1,6 @@
 # - *- coding: utf- 8 - *-
-from aiogram import Router, Bot
-from aiogram.filters import Text, Command
+from aiogram import Router, Bot, F
+from aiogram.filters import Command
 from aiogram.types import Message
 
 from tgbot.keyboards.reply_main import menu_frep
@@ -11,16 +11,15 @@ router = Router()
 
 
 # Открытие главного меню
-@router.message(Text(text=['🔙 Главное меню']))
+@router.message(F.text.in_(('🔙 Main menu', '🔙 Return')))
 @router.message(Command(commands=['start']))
 async def main_start(message: Message, bot: Bot, state: FSM, rSession: RS, my_user):
     await state.clear()
 
     await message.answer(
-        ded("""
-        🔸 Бот готов к использованию.
-        🔸 Если не появились вспомогательные кнопки
-        🔸 Введите /start
+        ded(f"""
+            🔸 Hello, {my_user['user_name']}
+            🔸 Enter /start or /inline
         """),
         reply_markup=menu_frep(message.from_user.id),
     )

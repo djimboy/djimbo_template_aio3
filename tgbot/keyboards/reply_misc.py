@@ -9,7 +9,7 @@ admin_rep = ReplyKeyboardBuilder(
     rkb("Admin Reply 1"),
     rkb("Admin Reply 2"),
 ).row(
-    rkb("🔙 Главное меню"),
+    rkb("🔙 Main menu"),
 ).as_markup(resize_keyboard=True)
 
 # Тестовые юзер реплай кнопки
@@ -18,5 +18,5 @@ user_rep = ReplyKeyboardBuilder(
     rkb("User Reply 1"),
     rkb("User Reply 2"),
 ).row(
-    rkb("🔙 Главное меню"),
+    rkb("🔙 Main menu"),
 ).as_markup(resize_keyboard=True)

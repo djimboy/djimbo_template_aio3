@@ -2,11 +2,11 @@
 import sqlite3
 
 from tgbot.data.config import PATH_DATABASE
-from tgbot.utils.const_functions import get_unix, get_date
+from tgbot.utils.const_functions import get_unix
 
 
 # Преобразование БД словаря
-def dict_factory(cursor, row):
+def dict_factory(cursor, row) -> dict:
     this_dict = {}
 
     for idx, col in enumerate(cursor.description):
@@ -18,7 +18,7 @@ def dict_factory(cursor, row):
 ####################################################################################################
 ##################################### ФОРМАТИРОВАНИЕ ЗАПРОСОВ ######################################
 # Форматирование запроса без аргументов
-def update_format(sql, parameters: dict):
+def update_format(sql, parameters: dict) -> tuple[str, list]:
     values = ", ".join([
         f"{item} = ?" for item in parameters
     ])
@@ -28,7 +28,7 @@ def update_format(sql, parameters: dict):
 
 
 # Форматирование запроса с аргументами
-def update_format_where(sql, parameters: dict):
+def update_format_args(sql, parameters: dict) -> tuple[str, list]:
     sql += " WHERE "
 
     sql += " AND ".join([
@@ -44,10 +44,12 @@ def update_format_where(sql, parameters: dict):
 def add_userx(user_id, user_login, user_name, user_surname, user_fullname):
     with sqlite3.connect(PATH_DATABASE) as con:
         con.row_factory = dict_factory
-        con.execute("INSERT INTO storage_users "
-                    "(user_id, user_login, user_name, user_surname, user_fullname, user_unix) "
-                    "VALUES (?, ?, ?, ?, ?, ?)",
-                    [user_id, user_login, user_name, user_surname, user_fullname, get_unix()])
+        con.execute(
+            "INSERT INTO storage_users "
+            "(user_id, user_login, user_name, user_surname, user_fullname, user_unix) "
+            "VALUES (?, ?, ?, ?, ?, ?)",
+            [user_id, user_login, user_name, user_surname, user_fullname, get_unix()],
+        )
 
 
 # Получение пользователя
@@ -55,7 +57,7 @@ def get_userx(**kwargs):
     with sqlite3.connect(PATH_DATABASE) as con:
         con.row_factory = dict_factory
         sql = "SELECT * FROM storage_users"
-        sql, parameters = update_format_where(sql, kwargs)
+        sql, parameters = update_format_args(sql, kwargs)
         return con.execute(sql, parameters).fetchone()
 
 
@@ -64,7 +66,7 @@ def get_usersx(**kwargs):
     with sqlite3.connect(PATH_DATABASE) as con:
         con.row_factory = dict_factory
         sql = "SELECT * FROM storage_users"
-        sql, parameters = update_format_where(sql, kwargs)
+        sql, parameters = update_format_args(sql, kwargs)
         return con.execute(sql, parameters).fetchall()
 
 
@@ -91,7 +93,7 @@ def delete_userx(**kwargs):
     with sqlite3.connect(PATH_DATABASE) as con:
         con.row_factory = dict_factory
         sql = "DELETE FROM storage_users"
-        sql, parameters = update_format_where(sql, kwargs)
+        sql, parameters = update_format_args(sql, kwargs)
         con.execute(sql, parameters)
 
 
@@ -105,13 +107,15 @@ def create_dbx():
         if len(con.execute("PRAGMA table_info(storage_users)").fetchall()) == 7:
             print("DB was found(1/1)")
         else:
-            con.execute("CREATE TABLE storage_users("
-                        "increment INTEGER PRIMARY KEY AUTOINCREMENT, "
-                        "user_id INTEGER,"
-                        "user_login TEXT,"
-                        "user_name TEXT,"
-                        "user_surname TEXT,"
-                        "user_fullname TEXT,"
-                        "user_unix INTEGER"
-                        ")")
+            con.execute(
+                "CREATE TABLE storage_users("
+                "increment INTEGER PRIMARY KEY AUTOINCREMENT, "
+                "user_id INTEGER,"
+                "user_login TEXT,"
+                "user_name TEXT,"
+                "user_surname TEXT,"
+                "user_fullname TEXT,"
+                "user_unix INTEGER"
+                ")"
+            )
             print("DB was not found(1/1) | Creating...")

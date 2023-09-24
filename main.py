@@ -21,7 +21,7 @@ colorama.init()
 # Запуск шедулеров
 async def scheduler_start(bot):
     scheduler.add_job(autobackup_admin, "cron", hour=00, args=(bot,))  # Ежедневный Автобэкап в 00:00
-    scheduler.add_job(autobackup_admin, "cron", hour=12, args=(bot,))  # Ежедневный Автобэкап в 12:00
+    # scheduler.add_job(autobackup_admin, "cron", hour=12, args=(bot,))  # Ежедневный Автобэкап в 12:00
 
 
 # Запуск бота и функций
@@ -39,7 +39,7 @@ async def main():
         await startup_notify(bot)
         await scheduler_start(bot)
 
-        bot_logger.warning("Bot was started")
+        bot_logger.warning("BOT WAS STARTED")
         print(colorama.Fore.LIGHTYELLOW_EX + f"~~~~~ Bot was started - @{(await bot.get_me()).username} ~~~~~")
         print(colorama.Fore.LIGHTBLUE_EX + "~~~~~ TG developer - @djimbox ~~~~~")
         print(colorama.Fore.RESET)
@@ -49,7 +49,11 @@ async def main():
         await bot.delete_webhook()
         await bot.get_updates(offset=-1)
 
-        await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types(), rSession=rSession)
+        await dp.start_polling(
+            bot,
+            allowed_updates=dp.resolve_used_update_types(),
+            rSession=rSession,
+        )
     finally:
         await rSession.close()
         await bot.session.close()

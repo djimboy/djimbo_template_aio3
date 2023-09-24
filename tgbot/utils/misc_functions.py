@@ -9,7 +9,7 @@ from tgbot.utils.const_functions import get_date, send_admins
 # Выполнение функции после запуска бота (рассылка админам о запуске бота)
 async def startup_notify(bot: Bot):
     if len(get_admins()) >= 1 and start_status:
-        await send_admins(bot, "<b>✅ Бот был запущен</b>")
+        await send_admins(bot, "<b>✅ Bot was started</b>")
 
 
 # Автоматические бэкапы БД

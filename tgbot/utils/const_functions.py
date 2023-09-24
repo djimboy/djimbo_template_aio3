@@ -6,7 +6,7 @@ from typing import Union
 
 import pytz
 from aiogram import Bot, types
-from aiogram.types import InlineKeyboardButton, KeyboardButton, WebAppInfo
+from aiogram.types import InlineKeyboardButton, KeyboardButton, WebAppInfo, Message
 
 from tgbot.data.config import get_admins, BOT_TIMEZONE
 
@@ -29,6 +29,14 @@ def ikb(text: str, data: str = None, url: str = None, switch: str = None, web: s
         return InlineKeyboardButton(text=text, web_app=WebAppInfo(url=web))
 
 
+# Удаление сообщений с обработкой ошибки от телеграма
+async def del_message(message: Message):
+    try:
+        await message.delete()
+    except:
+        ...
+
+
 # Отправка сообщения всем админам
 async def send_admins(bot: Bot, text: str, markup=None, not_me=0):
     for admin in get_admins():
@@ -36,7 +44,7 @@ async def send_admins(bot: Bot, text: str, markup=None, not_me=0):
             if str(admin) != str(not_me):
                 await bot.send_message(admin, text, reply_markup=markup, disable_web_page_preview=True)
         except:
-            pass
+            ...
 
 
 # Умная отправка сообщений

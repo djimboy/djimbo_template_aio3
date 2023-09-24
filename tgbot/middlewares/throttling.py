@@ -46,11 +46,15 @@ class ThrottlingMiddleware(BaseMiddleware):
                     self.users[this_user.id]['count_throttled'] = 2
                     self.users[this_user.id]['now_rate'] = self.default_rate + 3
 
-                    await event.reply("<b>❗ Пожалуйста, не спамьте.\n"
-                                      "❗ Please, do not spam.</b>")
+                    await event.reply(
+                        "<b>❗ Пожалуйста, не спамьте.\n"
+                        "❗ Please, do not spam.</b>",
+                    )
                 elif self.users[this_user.id]['count_throttled'] == 2:
                     self.users[this_user.id]['count_throttled'] = 3
                     self.users[this_user.id]['now_rate'] = self.default_rate + 5
 
-                    await event.reply("<b>❗ Бот не будет отвечать до прекращения спама.\n"
-                                      "❗ The bot will not respond until the spam stops.</b>")
+                    await event.reply(
+                        "<b>❗ Бот не будет отвечать до прекращения спама.\n"
+                        "❗ The bot will not respond until the spam stops.</b>",
+                    )

@@ -1,6 +1,6 @@
 # - *- coding: utf- 8 - *-
-from aiogram import Router, Bot
-from aiogram.filters import Text, Command
+from aiogram import Router, Bot, F
+from aiogram.filters import Command
 from aiogram.types import FSInputFile, Message, CallbackQuery
 
 from tgbot.data.config import PATH_DATABASE, PATH_LOGS
@@ -13,7 +13,7 @@ router = Router()
 
 
 # Кнопка - Admin Inline
-@router.message(Text(text="Admin Inline"))
+@router.message(F.text == 'Admin Inline')
 async def admin_button_inline(message: Message, bot: Bot, state: FSM, rSession: RS, my_user):
     await state.clear()
 
@@ -21,7 +21,7 @@ async def admin_button_inline(message: Message, bot: Bot, state: FSM, rSession: 
 
 
 # Кнопка - Admin Reply
-@router.message(Text(text="Admin Reply"))
+@router.message(F.text == 'Admin Reply')
 async def admin_button_reply(message: Message, bot: Bot, state: FSM, rSession: RS, my_user):
     await state.clear()
 
@@ -29,13 +29,13 @@ async def admin_button_reply(message: Message, bot: Bot, state: FSM, rSession: R
 
 
 # Колбэк - Admin X
-@router.callback_query(Text(text="admin_inline_x"))
+@router.callback_query(F.data == 'admin_inline_x')
 async def admin_callback_inline_x(call: CallbackQuery, bot: Bot, state: FSM, rSession: RS, my_user):
     await call.answer(f"Click Admin X")
 
 
 # Колбэк - Admin
-@router.callback_query(Text(startswith="admin_inline:"))
+@router.callback_query(F.data.startswith('admin_inline:'))
 async def admin_callback_inline(call: CallbackQuery, bot: Bot, state: FSM, rSession: RS, my_user):
     get_data = call.data.split(":")[1]
 
