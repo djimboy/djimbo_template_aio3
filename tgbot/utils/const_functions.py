@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Union
 
 import pytz
-from aiogram import Bot, types
+from aiogram import Bot
 from aiogram.types import InlineKeyboardButton, KeyboardButton, WebAppInfo, Message
 
 from tgbot.data.config import get_admins, BOT_TIMEZONE
@@ -29,7 +29,7 @@ def ikb(text: str, data: str = None, url: str = None, switch: str = None, web: s
         return InlineKeyboardButton(text=text, web_app=WebAppInfo(url=web))
 
 
-# Удаление сообщений с обработкой ошибки от телеграма
+# Удаление сообщения с обработкой ошибки от телеграма
 async def del_message(message: Message):
     try:
         await message.delete()
@@ -47,43 +47,8 @@ async def send_admins(bot: Bot, text: str, markup=None, not_me=0):
             ...
 
 
-# Умная отправка сообщений
-async def smart_send(bot: Bot, message: types.Message, user_id, text_add=None, reply=None):
-    if message.text is not None:
-        get_text = message.text
-    elif message.caption is not None:
-        get_text = message.caption
-    else:
-        get_text = ""
-
-    if text_add is not None:
-        get_text = text_add.format(get_text)
-
-    if message.photo is not None:
-        await bot.send_photo(user_id, message.photo[-1].file_id, caption=get_text, reply_markup=reply)
-    elif message.video is not None:
-        await bot.send_video(user_id, message.video.file_id, caption=get_text, reply_markup=reply)
-    elif message.document is not None:
-        await bot.send_document(user_id, message.document.file_id, caption=get_text, reply_markup=reply)
-    elif message.audio is not None:
-        await bot.send_audio(user_id, message.audio.file_id, caption=get_text, reply_markup=reply)
-    elif message.voice is not None:
-        await bot.send_voice(user_id, message.voice.file_id, caption=get_text, reply_markup=reply)
-    elif message.animation is not None:
-        await bot.send_animation(user_id, message.animation.file_id, reply_markup=reply)
-    elif message.sticker is not None:
-        await bot.send_sticker(user_id, message.sticker.file_id, reply_markup=reply)
-    elif message.dice is not None:
-        await bot.send_dice(user_id, emoji=message.dice.emoji, reply_markup=reply)
-    elif message.location is not None:
-        await bot.send_location(user_id, latitude=message.location.latitude, longitude=message.location.longitude,
-                                reply_markup=reply)
-    else:
-        await bot.send_message(user_id, get_text)
-
-
 ######################################## ПРОЧЕЕ ########################################
-# Удаление отступов у текста
+# Удаление отступов в многострочной строке ("""text""")
 def ded(get_text: str) -> str:
     if get_text is not None:
         split_text = get_text.split("\n")
@@ -103,9 +68,10 @@ def ded(get_text: str) -> str:
     return get_text
 
 
-# Очистка текста от HTML тэгов
+# Очистка текста от HTML тэгов ('<b>test</b>' -> *b*test*/b*)
 def clear_html(get_text: str) -> str:
     if get_text is not None:
+        if "</" in get_text: get_text = get_text.replace("<", "*")
         if "<" in get_text: get_text = get_text.replace("<", "*")
         if ">" in get_text: get_text = get_text.replace(">", "*")
     else:
@@ -114,7 +80,7 @@ def clear_html(get_text: str) -> str:
     return get_text
 
 
-# Очистка пробелов в списке
+# Очистка пробелов в списке (['', 1, ' ', 2] -> [1, 2])
 def clear_list(get_list: list) -> list:
     while "" in get_list: get_list.remove("")
     while " " in get_list: get_list.remove(" ")
@@ -124,31 +90,39 @@ def clear_list(get_list: list) -> list:
     return get_list
 
 
-# Разбив списка на несколько частей
+# Разбив списка на несколько частей ([1, 2, 3, 4] 2 -> [[1, 2], [3, 4]])
 def split_list(get_list: list, count: int) -> list[list]:
     return [get_list[i:i + count] for i in range(0, len(get_list), count)]
 
 
-# Получение даты
+# Получение текущей даты (True - дата с временем, False - дата без времени)
 def get_date(full: bool = True) -> str:
-    if full:  # Полная дата с временем
+    if full:
         return datetime.now(pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y %H:%M:%S")
-    else:  # Только дата без времени
+    else:
         return datetime.now(pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y")
 
 
-# Получение unix времени
+# Получение текущего unix времени (True - время в наносекундах, False - время в секундах)
 def get_unix(full: bool = False) -> int:
-    if full:  # Время в наносекундах
+    if full:
         return time.time_ns()
-    else:  # Время в секундах
+    else:
         return int(time.time())
 
 
-# Конвертация unix в дату и наоборот, дату в unix
-def convert_date(from_time) -> Union[str, int]:
+# Конвертация unix в дату и даты в unix
+def convert_date(from_time, full: bool = True, second: bool = True) -> Union[str, int]:
+    if "-" in str(from_time):
+        from_time = from_time.replace("-", ".")
+
     if str(from_time).isdigit():
-        to_time = datetime.fromtimestamp(from_time, pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y %H:%M:%S")
+        if full:
+            to_time = datetime.fromtimestamp(from_time, pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y %H:%M:%S")
+        elif second:
+            to_time = datetime.fromtimestamp(from_time, pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y %H:%M")
+        else:
+            to_time = datetime.fromtimestamp(from_time, pytz.timezone(BOT_TIMEZONE)).strftime("%d.%m.%Y")
     else:
         if " " in str(from_time):
             to_time = int(datetime.strptime(from_time, "%d.%m.%Y %H:%M:%S").timestamp())
@@ -178,8 +152,8 @@ def gen_password(len_password: int = 16, type_password: str = "default") -> str:
     return random_chars
 
 
-# Корректный вывод времени
-def convert_times(get_time, get_type="day") -> str:
+# Дополнение к числу корректного времени (1 -> 1 день, 3 -> 3 дня)
+def convert_times(get_time: int, get_type: str = "day") -> str:
     get_time = int(get_time)
     if get_time < 0: get_time = 0
 
@@ -219,8 +193,8 @@ def is_bool(value: Union[bool, str, int]) -> bool:
 
 
 ######################################## ЧИСЛА ########################################
-# Преобразование длинных вещественных чисел в читаемый вид
-def snum(amount, remains=0) -> str:
+# Преобразование экспоненциальных чисел в читаемый вид (1e-06 -> 0.000001)
+def snum(amount: float, remains=0) -> str:
     str_amount = f"{float(amount):8f}"
 
     if remains != 0:
@@ -238,8 +212,8 @@ def snum(amount, remains=0) -> str:
     return str(str_amount)
 
 
-# Конвертация числа в вещественное
-def to_float(get_number, remains=2) -> Union[int, float]:
+# Конвертация любого числа в вещественное, с удалением нулей в конце (remains - округление)
+def to_float(get_number, remains: int = 2) -> Union[int, float]:
     if "," in str(get_number):
         get_number = str(get_number).replace(",", ".")
 
@@ -267,8 +241,8 @@ def to_float(get_number, remains=2) -> Union[int, float]:
     return get_number
 
 
-# Конвертация числа в целочисленное
-def to_int(get_number) -> int:
+# Конвертация вещественного числа в целочисленное
+def to_int(get_number: float) -> int:
     if "," in get_number:
         get_number = str(get_number).replace(",", ".")
 
@@ -277,8 +251,8 @@ def to_int(get_number) -> int:
     return get_number
 
 
-# Проверка числа на вещественное
-def is_number(get_number) -> bool:
+# Проверка ввода на число
+def is_number(get_number: Union[str, int, float]) -> bool:
     if str(get_number).isdigit():
         return True
     else:
@@ -291,7 +265,7 @@ def is_number(get_number) -> bool:
             return False
 
 
-# Форматирование числа в читаемый вид
+# Преобразование числа в читаемый вид (123456789 -> 123 456 789)
 def format_rate(amount: Union[float, int], around: int = 2) -> str:
     if "," in str(amount): amount = float(str(amount).replace(",", "."))
     if " " in str(amount): amount = float(str(amount).replace(" ", ""))
