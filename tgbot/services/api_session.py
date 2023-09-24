@@ -4,6 +4,11 @@ from typing import Optional
 import aiohttp
 
 
+# In handler
+# session = await rSession.get_session()
+# response = await session.get(...)
+# response = await session.post(...)
+
 # Асинхронная сессия для запросов
 class RequestSession:
     def __init__(self) -> None:
