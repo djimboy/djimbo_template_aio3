@@ -58,23 +58,26 @@ def get_userx(**kwargs):
         con.row_factory = dict_factory
         sql = "SELECT * FROM storage_users"
         sql, parameters = update_format_args(sql, kwargs)
+
         return con.execute(sql, parameters).fetchone()
 
 
 # Получение пользователей
-def get_usersx(**kwargs):
+def get_usersx(**kwargs) -> list[dict]:
     with sqlite3.connect(PATH_DATABASE) as con:
         con.row_factory = dict_factory
         sql = "SELECT * FROM storage_users"
         sql, parameters = update_format_args(sql, kwargs)
+
         return con.execute(sql, parameters).fetchall()
 
 
 # Получение всех пользователей
-def get_all_usersx():
+def get_all_usersx() -> list[dict]:
     with sqlite3.connect(PATH_DATABASE) as con:
         con.row_factory = dict_factory
         sql = "SELECT * FROM storage_users"
+
         return con.execute(sql).fetchall()
 
 
