@@ -1,6 +1,7 @@
 # - *- coding: utf- 8 - *-
 import random
 import time
+import uuid
 from datetime import datetime
 from typing import Union
 
@@ -130,6 +131,14 @@ def convert_date(from_time, full: bool = True, second: bool = True) -> Union[str
             to_time = int(datetime.strptime(from_time, "%d.%m.%Y").timestamp())
 
     return to_time
+
+
+# Генерация уникального айди
+def gen_id() -> int:
+    mac_address = uuid.getnode()
+    time_unix = int(str(time.time_ns())[:16])
+
+    return mac_address + time_unix
 
 
 # Генерация пароля | default, number, letter, onechar
