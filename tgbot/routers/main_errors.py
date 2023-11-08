@@ -6,7 +6,7 @@ from aiogram.handlers import ErrorHandler
 
 from tgbot.utils.misc.bot_logging import bot_logger
 
-router = Router()
+router = Router(name=__name__)
 
 
 # Ошибка с блокировкой бота пользователем

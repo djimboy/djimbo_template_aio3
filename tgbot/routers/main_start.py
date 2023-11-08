@@ -7,7 +7,7 @@ from tgbot.keyboards.reply_main import menu_frep
 from tgbot.utils.const_functions import ded
 from tgbot.utils.misc.bot_models import FSM, RS
 
-router = Router()
+router = Router(name=__name__)
 
 
 # Открытие главного меню

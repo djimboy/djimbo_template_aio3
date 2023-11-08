@@ -9,7 +9,7 @@ from tgbot.keyboards.reply_misc import admin_rep
 from tgbot.utils.const_functions import get_date
 from tgbot.utils.misc.bot_models import FSM, RS
 
-router = Router()
+router = Router(name=__name__)
 
 
 # Кнопка - Admin Inline

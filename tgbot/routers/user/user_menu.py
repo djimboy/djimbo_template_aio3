@@ -8,7 +8,7 @@ from tgbot.keyboards.inline_misc import user_inl
 from tgbot.keyboards.reply_misc import user_rep
 from tgbot.utils.misc.bot_models import FSM, RS
 
-router = Router()
+router = Router(name=__name__)
 
 
 # Кнопка - User Inline
