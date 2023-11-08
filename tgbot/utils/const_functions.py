@@ -85,8 +85,10 @@ def clear_html(get_text: str) -> str:
 def clear_list(get_list: list) -> list:
     while "" in get_list: get_list.remove("")
     while " " in get_list: get_list.remove(" ")
+    while "." in get_list: get_list.remove(".")
     while "," in get_list: get_list.remove(",")
     while "\r" in get_list: get_list.remove("\r")
+    while "\n" in get_list: get_list.remove("\n")
 
     return get_list
 
