@@ -8,8 +8,9 @@ from tgbot.utils.const_functions import rkb
 
 # Кнопки главного меню
 def menu_frep(user_id) -> ReplyKeyboardMarkup:
-    keyboard = ReplyKeyboardBuilder(
-    ).row(
+    keyboard = ReplyKeyboardBuilder()
+
+    keyboard.row(
         rkb("User Inline"), rkb("User Reply"),
     )
 
