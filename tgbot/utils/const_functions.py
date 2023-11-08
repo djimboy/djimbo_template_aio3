@@ -43,7 +43,12 @@ async def send_admins(bot: Bot, text: str, markup=None, not_me=0):
     for admin in get_admins():
         try:
             if str(admin) != str(not_me):
-                await bot.send_message(admin, text, reply_markup=markup, disable_web_page_preview=True)
+                await bot.send_message(
+                    admin,
+                    text,
+                    reply_markup=markup,
+                    disable_web_page_preview=True,
+                )
         except:
             ...
 
