@@ -7,7 +7,8 @@ from typing import Union
 
 import pytz
 from aiogram import Bot
-from aiogram.types import InlineKeyboardButton, KeyboardButton, WebAppInfo, Message
+from aiogram.types import InlineKeyboardButton, KeyboardButton, WebAppInfo, Message, InlineKeyboardMarkup, \
+    ReplyKeyboardMarkup
 
 from tgbot.data.config import get_admins, BOT_TIMEZONE
 
@@ -36,6 +37,29 @@ async def del_message(message: Message):
         await message.delete()
     except:
         ...
+
+
+# Умная отправка сообщений (автоотправка сообщения с фото или без)
+async def smart_message(
+        bot: Bot,
+        user_id: int,
+        text: str,
+        keyboard: Union[InlineKeyboardMarkup, ReplyKeyboardMarkup] = None,
+        photo: Union[str, None] = None,
+):
+    if photo is not None and photo.title() != "None":
+        await bot.send_photo(
+            chat_id=user_id,
+            photo=photo,
+            caption=text,
+            reply_markup=keyboard,
+        )
+    else:
+        await bot.send_message(
+            chat_id=user_id,
+            text=text,
+            reply_markup=keyboard,
+        )
 
 
 # Отправка сообщения всем админам
