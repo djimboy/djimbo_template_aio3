@@ -7,10 +7,10 @@ import colorama
 from aiogram import Bot, Dispatcher
 
 from tgbot.data.config import BOT_TOKEN, scheduler, get_admins
+from tgbot.database.db_helper import create_dbx
 from tgbot.middlewares import register_all_middlwares
 from tgbot.routers import register_all_routers
-from tgbot.services.api_session import RequestSession
-from tgbot.services.api_sqlite import create_dbx
+from tgbot.services.api_session import AsyncRequestSession
 from tgbot.utils.misc.bot_commands import set_commands
 from tgbot.utils.misc.bot_logging import bot_logger
 from tgbot.utils.misc_functions import autobackup_admin, startup_notify
@@ -28,7 +28,7 @@ async def scheduler_start(bot):
 async def main():
     scheduler.start()  # Запуск Шедулера
     dp = Dispatcher()  # Образ Диспетчера
-    rSession = RequestSession()  # Пул асинхронной сессии запросов
+    arSession = AsyncRequestSession()  # Пул асинхронной сессии запросов
     bot = Bot(token=BOT_TOKEN, parse_mode="HTML")  # Образ Бота
 
     register_all_middlwares(dp)  # Регистрация всех мидлварей
@@ -52,10 +52,10 @@ async def main():
         await dp.start_polling(
             bot,
             allowed_updates=dp.resolve_used_update_types(),
-            rSession=rSession,
+            arSession=arSession,
         )
     finally:
-        await rSession.close()
+        await arSession.close()
         await bot.session.close()
 
 

@@ -21,6 +21,9 @@ class ThrottlingMiddleware(BaseMiddleware):
         if get_flag(data, "rate") is not None:
             self.default_rate = get_flag(data, "rate")
 
+        if self.default_rate == 0:
+            return await handler(event, data)
+
         if this_user.id not in self.users:
             self.users[this_user.id] = {
                 'last_throttled': int(time.time()),

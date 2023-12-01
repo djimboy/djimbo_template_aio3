@@ -1,7 +1,6 @@
 # - *- coding: utf- 8 - *-
 from aiogram import Router
-from aiogram.exceptions import TelegramForbiddenError
-from aiogram.filters import ExceptionTypeFilter, ExceptionMessageFilter
+from aiogram.filters import ExceptionMessageFilter
 from aiogram.handlers import ErrorHandler
 
 from tgbot.utils.misc.bot_logging import bot_logger
@@ -10,10 +9,10 @@ router = Router(name=__name__)
 
 
 # Ошибка с блокировкой бота пользователем
-@router.errors(ExceptionTypeFilter(TelegramForbiddenError))
-class MyHandler(ErrorHandler):
-    async def handle(self):
-        pass
+# @router.errors(ExceptionTypeFilter(TelegramForbiddenError))
+# class MyHandler(ErrorHandler):
+#     async def handle(self):
+#         pass
 
 
 # Ошибка с редактированием одинакового сообщения

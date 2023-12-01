@@ -1,8 +1,8 @@
 # - *- coding: utf- 8 - *-
 from aiogram import Dispatcher
 
-from tgbot.middlewares.exists_user import ExistsUserMiddleware
-from tgbot.middlewares.throttling import ThrottlingMiddleware
+from tgbot.middlewares.middleware_user import ExistsUserMiddleware
+from tgbot.middlewares.middleware_throttling import ThrottlingMiddleware
 
 
 # Регистрация всех миддлварей

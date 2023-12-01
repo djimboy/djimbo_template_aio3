@@ -5,12 +5,12 @@ import aiohttp
 
 
 # In handler
-# session = await rSession.get_session()
+# session = await arSession.get_session()
 # response = await session.get(...)
 # response = await session.post(...)
 
 # Асинхронная сессия для запросов
-class RequestSession:
+class AsyncRequestSession:
     def __init__(self) -> None:
         self._session: Optional[aiohttp.ClientSession] = None
 
