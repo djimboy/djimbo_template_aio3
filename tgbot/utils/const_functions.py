@@ -83,7 +83,7 @@ def ded(get_text: str) -> str:
     if get_text is not None:
         split_text = get_text.split("\n")
         if split_text[0] == "": split_text.pop(0)
-        if split_text[-1] == "": split_text.pop(-1)
+        if split_text[-1] == "": split_text.pop()
         save_text = []
 
         for text in split_text:
@@ -264,19 +264,23 @@ def is_bool(value: Union[bool, str, int]) -> bool:
 
 ######################################## ЧИСЛА ########################################
 # Преобразование экспоненциальных чисел в читаемый вид (1e-06 -> 0.000001)
-def snum(amount: Union[int, float]) -> str:
-    str_amount = str(amount)
+def snum(amount: Union[int, float], remains: int = 2) -> str:
+    format_str = "{:." + str(remains) + "f}"
+    str_amount = format_str.format(float(amount))
 
-    if "e" in str_amount:
-        decial = str_amount.split("e")
-        str_amount = format(((float(decial[0])) * (10 ** int(decial[1]))), ".8f")
+    if remains != 0:
+        if "." in str_amount:
+            remains_find = str_amount.find(".")
+            remains_save = remains_find + 8 - (8 - remains) + 1
+
+            str_amount = str_amount[:remains_save]
 
     if "." in str(str_amount):
-        while str(str_amount).endswith("0"): str_amount = str(str_amount)[:-1]
+        while str(str_amount).endswith('0'): str_amount = str(str_amount)[:-1]
 
-    if str(str_amount).endswith("."): str_amount = str(str_amount)[:-1]
+    if str(str_amount).endswith('.'): str_amount = str(str_amount)[:-1]
 
-    return str_amount
+    return str(str_amount)
 
 
 # Конвертация любого числа в вещественное, с удалением нулей в конце (remains - округление)

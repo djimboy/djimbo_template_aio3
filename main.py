@@ -6,7 +6,7 @@ import sys
 import colorama
 from aiogram import Bot, Dispatcher
 
-from tgbot.data.config import BOT_TOKEN, scheduler, get_admins
+from tgbot.data.config import BOT_TOKEN, BOT_SCHEDULER, get_admins
 from tgbot.database.db_helper import create_dbx
 from tgbot.middlewares import register_all_middlwares
 from tgbot.routers import register_all_routers
@@ -20,13 +20,12 @@ colorama.init()
 
 # Запуск шедулеров
 async def scheduler_start(bot):
-    scheduler.add_job(autobackup_admin, "cron", hour=00, args=(bot,))  # Ежедневный Автобэкап в 00:00
-    scheduler.add_job(autobackup_admin, "cron", hour=12, args=(bot,))  # Ежедневный Автобэкап в 12:00
+    BOT_SCHEDULER.add_job(autobackup_admin, "cron", hour=00, args=(bot,))  # Ежедневный Автобэкап в 00:00
 
 
 # Запуск бота и базовых функций
 async def main():
-    scheduler.start()  # Запуск Шедулера
+    BOT_SCHEDULER.start()  # Запуск Шедулера
     dp = Dispatcher()  # Образ Диспетчера
     arSession = AsyncRequestSession()  # Пул асинхронной сессии запросов
     bot = Bot(token=BOT_TOKEN, parse_mode="HTML")  # Образ Бота
