@@ -54,7 +54,7 @@ async def admin_database(message: Message, bot: Bot, state: FSM, arSession: ARS,
 
     await message.answer_document(
         FSInputFile(PATH_DATABASE),
-        caption=f"<b>📦 #BACKUP | <code>{get_date(full=False)}</code></b>",
+        caption=f"<b>📦 #BACKUP | <code>{get_date()}</code></b>",
     )
 
 

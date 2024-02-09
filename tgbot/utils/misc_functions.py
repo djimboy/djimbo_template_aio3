@@ -19,8 +19,7 @@ async def autobackup_admin(bot: Bot):
             await bot.send_document(
                 admin,
                 FSInputFile(PATH_DATABASE),
-                caption=f"<b>📦 AUTOBACKUP</b>\n"
-                        f"🕰 <code>{get_date()}</code>",
+                caption=f"<b>📦 #AUTOBACKUP | <code>{get_date()}</code></b>",
             )
         except:
             pass
