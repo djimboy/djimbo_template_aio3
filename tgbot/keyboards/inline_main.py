@@ -7,7 +7,7 @@ from tgbot.utils.const_functions import ikb
 
 
 # Кнопки инлайн меню
-def menu_finl(user_id) -> InlineKeyboardMarkup:
+def menu_finl(user_id: int) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardBuilder()
 
     keyboard.row(

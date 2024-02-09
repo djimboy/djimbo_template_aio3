@@ -7,7 +7,7 @@ from tgbot.utils.const_functions import rkb
 
 
 # Кнопки главного меню
-def menu_frep(user_id) -> ReplyKeyboardMarkup:
+def menu_frep(user_id: int) -> ReplyKeyboardMarkup:
     keyboard = ReplyKeyboardBuilder()
 
     keyboard.row(
