@@ -1,1 +1,1 @@
-Template bot for Aiogram 3
+Template telegram bot for Aiogram 3
